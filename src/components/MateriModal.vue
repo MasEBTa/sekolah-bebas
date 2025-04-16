@@ -22,7 +22,9 @@
             </div>
           </div>
           <div class="child2b dflex">
-            <div class="love"><span style="font-size: 24px">❤️</span></div>
+            <div class="love">
+              <i class="bi bi-heart-fill"></i>
+            </div>
             <div class="persentase mt-auto">100%</div>
           </div>
         </div>
@@ -74,7 +76,7 @@
 }
 .child1b {
   /* background-color: blue; */
-  flex: 3;
+  flex: 2;
   padding-left: 0.5rem;
   flex-direction: column;
 }
@@ -130,8 +132,8 @@
   align-items: center;
 }
 .love {
-  /* color: linear-gradient(to right, black, #18175f, #3533cb); */
-  color: white;
+  font-size: 2rem;
+  color: #18175f;
 }
 .persentase {
   margin-top: auto;
