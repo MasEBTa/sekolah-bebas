@@ -1,0 +1,146 @@
+<template>
+  <div class="cover">
+    <div class="card">
+      <div class="card-body">
+        <div class="navbar-brand rounded-circle child1a child" href="#">
+          <img
+            src="../assets/flat_750x_075_f-pad_750x1000_f8f8f8.u1-removebg-preview.png"
+            alt="Bootstrap"
+            width="100%"
+            height="100%"
+          />
+        </div>
+        <div class="child2a">
+          <div class="child1b">
+            <div class="keterangan-materi">
+              <h1 class="judul-materi">Iqra 1</h1>
+              <p class="penjelasan-materi">Pengenalan Huruf hijaiah</p>
+            </div>
+            <div class="status-materi d-flex">
+              <div class="statbox1">status</div>
+              <div class="statbox2">ongoing</div>
+            </div>
+          </div>
+          <div class="child2b dflex">
+            <div class="love"><span style="font-size: 24px">❤️</span></div>
+            <div class="persentase mt-auto">100%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+/* kotak materi */
+.card {
+  margin: 1rem;
+  padding: 0;
+  --bs-card-spacer-y: 0;
+  --bs-card-spacer-x: 0;
+  background-color: #fff4e2;
+  border-radius: 1.3rem;
+  overflow: hidden;
+}
+@media (min-width: 650px) {
+  .cover {
+    display: flex;
+    justify-content: space-around;
+  }
+  .card {
+    width: 650px;
+  }
+}
+.card-body {
+  justify-content: space-between;
+  display: flex;
+}
+
+/* isi kotak materi: gambar */
+.child1a {
+  border-radius: 100%;
+  width: 5rem;
+  height: 5rem;
+}
+
+/* isi kotak materi: 2bagian */
+.child2a,
+.child1b {
+  display: flex;
+}
+.child2a {
+  flex: 1;
+  padding: 0.3rem 0 0.3rem 0;
+}
+.child1b {
+  /* background-color: blue; */
+  flex: 3;
+  padding-left: 0.5rem;
+  flex-direction: column;
+}
+
+/* materi kiri */
+.keterangan-materi {
+  max-height: 3rem;
+  overflow: hidden;
+}
+/* text materi */
+.progress-materi,
+.judul-materi {
+  margin: 0;
+  padding: 0;
+}
+.judul-materi {
+  font-size: 1rem;
+}
+.progress-materi {
+  font-size: 0.6rem;
+}
+
+/* progress materi */
+.status-materi {
+  margin-top: auto;
+}
+.statbox1,
+.statbox2,
+.persentase {
+  width: 5rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 0.5rem;
+}
+.statbox1 {
+  background-color: white;
+  margin-right: 0.3rem;
+}
+.statbox2 {
+  background: linear-gradient(to right, black, #18175f, #3533cb);
+  color: white;
+}
+
+/* materi kanan */
+.child2b {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.love {
+  /* color: linear-gradient(to right, black, #18175f, #3533cb); */
+  color: white;
+}
+.persentase {
+  margin-top: auto;
+  background: linear-gradient(to right, black, #18175f, #3533cb);
+  color: white;
+}
+@media (max-width: 350px) {
+  .child2b {
+    display: none;
+  }
+}
+</style>

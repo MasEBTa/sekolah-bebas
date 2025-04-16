@@ -26,8 +26,8 @@
   background: linear-gradient(
     to right,
     black,
-    #4f46e5,
-    #4338ca
+    #18175f,
+    #3533cb
   ); /* Gradient dari hitam ke indigo */
 }
 .logofont {

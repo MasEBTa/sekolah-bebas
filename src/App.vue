@@ -8,7 +8,7 @@ import Header from "./components/Header.vue";
   <RouterView />
 </template>
 
-<style scoped>
+<!-- <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -79,4 +79,4 @@ nav a:first-of-type {
     #4338ca
   ); /* Gradient dari hitam ke indigo */
 }
-</style>
+</style> -->
