@@ -1,3 +1,13 @@
+<script setup>
+defineProps({
+  judul: String,
+  deskripsi: String,
+  status: String,
+  progres: Number,
+  gambar: String,
+});
+</script>
+
 <template>
   <div class="cover">
     <div class="card">
@@ -13,8 +23,8 @@
         <div class="child2a">
           <div class="child1b">
             <div class="keterangan-materi">
-              <h1 class="judul-materi">Iqra 1</h1>
-              <p class="penjelasan-materi">Pengenalan Huruf hijaiah</p>
+              <h1 class="judul-materi">{{ judul }}</h1>
+              <p class="penjelasan-materi">{{ deskripsi }}</p>
             </div>
             <div class="status-materi d-flex">
               <div class="statbox1">status</div>

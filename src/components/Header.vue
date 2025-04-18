@@ -16,7 +16,56 @@
         />
       </a>
       <div class="nav justify-content-center text-white logofont">Tpq</div>
-      <div></div>
+      <div>
+        <!-- Button trigger modal -->
+        <i
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          class="bi bi-menu-button-fill menu"
+        ></i>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Pilih Pelajaran
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="list-group">
+              <button
+                type="button"
+                class="list-group-item list-group-item-action active"
+                aria-current="true"
+              >
+                Bahasa Arab
+              </button>
+              <button
+                type="button"
+                class="list-group-item list-group-item-action"
+              >
+                Bahasa Jepang
+              </button>
+            </div>
+            <div class="modal-footer"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -40,5 +89,13 @@
     format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+.menu {
+  color: aliceblue;
+}
+/* Saat di-hover */
+.menu:hover {
+  color: #b56e3f;
 }
 </style>
