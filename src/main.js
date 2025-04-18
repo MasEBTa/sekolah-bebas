@@ -8,8 +8,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import { createPinia } from "pinia";
+
 const app = createApp(App);
 
+// instance pinia
+const pinia = createPinia();
+
 app.use(router);
+// gunsksn pinis di app
+app.use(pinia);
 
 app.mount("#app");
