@@ -116,7 +116,7 @@ defineProps({
 .statbox1,
 .statbox2,
 .persentase {
-  width: 5rem;
+  width: 4rem;
   padding-top: 0.1rem;
   padding-bottom: 0.1rem;
   font-size: 0.8rem;
