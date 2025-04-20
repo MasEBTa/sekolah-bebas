@@ -1,24 +1,48 @@
 <script setup>
 import Header from "../components/Header.vue";
 import MateriModal from "../components/MateriModal.vue";
-import dummyData from "../mock/lesson.js";
 
-// Ambil data untuk mapel Bahasa Arab
-const data = dummyData.find((item) => item.mapel === "bahasa_arab");
+import { useRoute } from "vue-router";
+import { computed, onMounted } from "vue";
+import { useLessonStore } from "@/stores/lessonStore";
+
+// pertama aplikasi di buka isi data lesson
+import { loadDummyLessons } from "../service/fetchDummyLesson";
+loadDummyLessons();
+
+// Ambil bagian terakhir dari path URL
+const route = useRoute();
+const path = computed(() => route.path.split("/").pop());
+console.log("📍 Path dari URL:", path.value);
+
+// Reactive: ambil data dari store berdasarkan path
+const store = useLessonStore();
+const dataMapel = computed(() =>
+  store.lessons.find((item) => item.path === path.value)
+);
+const allMapelNames = computed(() => store.allMapelNames);
+
+onMounted(() => {
+  console.log("✅ Data lesson di komponen:", store.lessons);
+  console.log("🎯 Data berdasarkan path:", dataMapel.value);
+  console.log("📚 Daftar semua mapel:", store.allMapelNames);
+});
 </script>
 
 <template>
   <div>
-    <Header />
+    <Header :mapelList="allMapelNames" />
     <main>
-      <div v-for="level in data.levels" :key="level.id">
-        <MateriModal
-          :judul="level.judul"
-          :deskripsi="level.deskripsi"
-          :status="level.status"
-          :progres="level.progres"
-          :gambar="`/src/assets/${level.gambar}`"
-        />
+      <div v-if="dataMapel">
+        <div v-for="level in dataMapel.levels" :key="level.id">
+          <MateriModal
+            :judul="level.judul"
+            :deskripsi="level.deskripsi"
+            :status="level.status"
+            :progres="level.progres"
+            :gambar="`/src/assets/${level.gambar}`"
+          />
+        </div>
       </div>
     </main>
   </div>

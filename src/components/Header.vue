@@ -1,3 +1,12 @@
+<script setup>
+defineProps({
+  mapelList: {
+    type: Array,
+    required: true,
+  },
+});
+</script>
+
 <template>
   <header
     class="navbar custom-gradient px-4 py-3 d-flex justify-content-between align-items-center shadow"
@@ -48,20 +57,16 @@
               ></button>
             </div>
             <div class="list-group">
-              <button
-                type="button"
-                class="list-group-item list-group-item-action active"
-                aria-current="true"
-              >
-                Bahasa Arab
-              </button>
-              <button
-                type="button"
+              <router-link
+                v-for="(item, index) in mapelList"
+                :key="index"
                 class="list-group-item list-group-item-action"
+                :to="`/${item.path}`"
               >
-                Bahasa Jepang
-              </button>
+                {{ item.mapel }}
+              </router-link>
             </div>
+
             <div class="modal-footer"></div>
           </div>
         </div>

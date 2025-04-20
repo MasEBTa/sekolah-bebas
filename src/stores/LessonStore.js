@@ -32,7 +32,10 @@ export const useLessonStore = defineStore("lesson", {
     },
 
     allMapelNames: (state) => {
-      return state.lessons.map((item) => item.mapel);
+      return state.lessons.map((item) => ({
+        mapel: item.mapel,
+        path: item.path,
+      }));
     },
   },
 });
