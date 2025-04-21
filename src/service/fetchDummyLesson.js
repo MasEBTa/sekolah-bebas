@@ -1,29 +1,57 @@
-// src/services/fetchDummyLessons.js
+// src/services/fetchLessons.js
+import { supabase } from "@/lib/supabase.js";
+import { useLessonStore } from "@/stores/lessonStore.js";
 
-import dummyData from "../mock/lesson.js";
-import { isValidLessonData } from "../helpers/validateLesson.js";
-import { useLessonStore } from "../stores/lessonStore.js";
-
-export function loadDummyLessons() {
+export async function loadLessonsFromSupabase() {
   const store = useLessonStore();
-
   store.setLoading(true);
 
   try {
-    // validasi data dummy sebelum dimasukkan ke store
-    if (isValidLessonData(dummyData)) {
-      // console.log("✅ Data valid:", dummyData); // nyalakan untuk cek kesalahan
+    // ambil daftar pelajaran beserta mapel-nya (join)
+    const { data, error } = await supabase
+      .from("lessons")
+      .select(
+        "id, title, description, status, progress, subject_id, mapel (id, nama_mapel, path, nama_app)"
+      );
+    console.log(data);
 
-      store.setLessons(dummyData);
-    } else {
-      store.setError("Data dummy tidak valid");
-      console.log("❌ Data dummy tidak valid");
+    if (error) {
+      throw error;
     }
+
+    // bentuk ulang data supaya cocok dengan bentuk lessonStore kamu
+    const grouped = {};
+
+    data.forEach((lesson) => {
+      const { mapel } = lesson;
+
+      if (!grouped[mapel.path]) {
+        grouped[mapel.path] = {
+          mapel: mapel.nama_mapel,
+          path: mapel.path,
+          levels: [],
+        };
+      }
+
+      grouped[mapel.path].levels.push({
+        id: lesson.id,
+        judul: lesson.title,
+        deskripsi: lesson.description,
+        status: lesson.status,
+        progres: lesson.progres,
+        // gambar: null (tidak dimasukkan karena belum ada)
+      });
+    });
+
+    // Ubah dari objek ke array
+    const result = Object.values(grouped);
+    console.log(result);
+
+    store.setLessons(result);
   } catch (err) {
-    store.setError("Terjadi kesalahan saat memuat data");
-    console.error("❌ Error:", err);
+    console.error("❌ Gagal mengambil data dari Supabase:", err.message);
+    store.setError("Gagal mengambil data dari Supabase");
   } finally {
     store.setLoading(false);
-    // console.log("⏹️ Loading selesai"); // nyalakan untuk cek kesalahan
   }
 }

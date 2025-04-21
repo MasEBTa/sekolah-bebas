@@ -7,8 +7,8 @@ import { computed, onMounted } from "vue";
 import { useLessonStore } from "@/stores/lessonStore";
 
 // pertama aplikasi di buka isi data lesson
-import { loadDummyLessons } from "../service/fetchDummyLesson";
-loadDummyLessons();
+import { loadLessonsFromSupabase } from "../service/fetchDummyLesson";
+loadLessonsFromSupabase();
 
 // Ambil bagian terakhir dari path URL
 const route = useRoute();
