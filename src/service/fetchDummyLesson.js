@@ -13,7 +13,7 @@ export async function loadLessonsFromSupabase() {
       .select(
         "id, title, description, status, progress, subject_id, mapel (id, nama_mapel, path, nama_app)"
       );
-    console.log(data);
+    // console.log("ini datanya", data);
 
     if (error) {
       throw error;
@@ -29,6 +29,7 @@ export async function loadLessonsFromSupabase() {
         grouped[mapel.path] = {
           mapel: mapel.nama_mapel,
           path: mapel.path,
+          app: mapel.nama_app,
           levels: [],
         };
       }
@@ -45,7 +46,7 @@ export async function loadLessonsFromSupabase() {
 
     // Ubah dari objek ke array
     const result = Object.values(grouped);
-    console.log(result);
+    // console.log("ini hasilnya", result);
 
     store.setLessons(result);
   } catch (err) {

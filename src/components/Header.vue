@@ -5,6 +5,11 @@ defineProps({
     required: true,
   },
 });
+
+import { computed } from "vue"; // ✅ TAMBAHKAN INI
+import { useRoute } from "vue-router";
+const route = useRoute();
+const path = computed(() => route.path.split("/").pop());
 </script>
 
 <template>
@@ -24,7 +29,12 @@ defineProps({
           height="100%"
         />
       </a>
-      <div class="nav justify-content-center text-white logofont">Tpq</div>
+      <div class="nav justify-content-center text-white logofont">
+        <span v-for="(item, index) in mapelList"
+          ><span v-if="path == item.path">{{ item.app }}</span></span
+        >
+      </div>
+
       <div>
         <!-- Button trigger modal -->
         <i

@@ -20,7 +20,10 @@ const store = useLessonStore();
 const dataMapel = computed(() =>
   store.lessons.find((item) => item.path === path.value)
 );
+// console.log("data maspel :", dataMapel);
+
 const allMapelNames = computed(() => store.allMapelNames);
+// console.log("mapelname :", allMapelNames);
 
 onMounted(() => {
   console.log("✅ Data lesson di komponen:", store.lessons);

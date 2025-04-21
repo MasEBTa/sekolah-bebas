@@ -35,7 +35,7 @@ export const useLessonStore = defineStore("lesson", {
       return state.lessons.map((item) => ({
         mapel: item.mapel,
         path: item.path,
-        app: item.nama_app,
+        app: item.app,
       }));
     },
   },
