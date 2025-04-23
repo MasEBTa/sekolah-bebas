@@ -11,7 +11,7 @@ export async function loadLessonsFromSupabase() {
     const { data, error } = await supabase
       .from("lessons")
       .select(
-        "id, title, description, progress, subject_id, slug, mapel (id, nama_mapel, path, nama_app, img)"
+        "id, title, description, progress, subject_id, slug, image_url, logo_url, mapel (id, nama_mapel, path, nama_app, img)"
       );
     // console.log("ini datanya", data);
 
@@ -41,7 +41,8 @@ export async function loadLessonsFromSupabase() {
         deskripsi: lesson.description,
         progress: lesson.progress,
         slug: lesson.slug,
-        // gambar: null (tidak dimasukkan karena belum ada)
+        gambar: lesson.image_url,
+        logo: lesson.logo_url,
       });
     });
 

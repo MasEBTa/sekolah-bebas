@@ -1,6 +1,7 @@
 <script setup>
 // header
 import Header from "../components/levelDetailComponents/Header.vue";
+import Hero from "../components/levelDetailComponents/HeroComponent.vue";
 
 import { computed } from "vue";
 
@@ -18,7 +19,10 @@ console.log("ini", data.value);
 </script>
 
 <template>
-  <div><Header :judul="data" /></div>
+  <div>
+    <Header :judul="data" />
+    <Hero :data="data" />
+  </div>
 </template>
 
 <style scoped></style>

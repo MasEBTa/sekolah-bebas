@@ -45,7 +45,7 @@ onMounted(() => {
             :status="level.status"
             :progres="level.progress"
             :slug="level.slug"
-            :gambar="`/src/assets/${level.gambar}`"
+            :gambar="level.logo"
           />
         </div>
       </div>

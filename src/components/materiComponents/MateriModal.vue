@@ -23,7 +23,7 @@ const mapel = route.params.mapel;
       >
         <div class="navbar-brand rounded-circle child1a child" href="#">
           <img
-            src="../../assets/flat_750x_075_f-pad_750x1000_f8f8f8.u1-removebg-preview.png"
+            :src="gambar || '/img/barab/leveldetail/IQRA-6-full-512.jpg'"
             alt="Bootstrap"
             width="100%"
             height="100%"

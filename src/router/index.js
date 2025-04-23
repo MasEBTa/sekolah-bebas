@@ -6,13 +6,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/detail",
-      name: "detail",
-      component: DetailLesson,
-    },
-    {
       path: "/",
-      redirect: "/detail", // default ke Bahasa Arab
+      redirect: "/barab", // default ke Bahasa Arab
     },
     {
       path: "/:mapel", // path dinamis seperti /barab, /baing, dll
