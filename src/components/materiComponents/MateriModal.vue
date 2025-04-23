@@ -5,16 +5,25 @@ defineProps({
   status: String,
   progres: Number,
   gambar: String,
+  slug: String,
 });
+
+// ambil data di router
+import { useRoute } from "vue-router";
+const route = useRoute();
+const mapel = route.params.mapel;
 </script>
 
 <template>
   <div class="cover">
     <div class="card">
-      <div class="card-body">
+      <RouterLink
+        :to="`/${mapel}/detail/${slug}`"
+        class="card-body text-decoration-none"
+      >
         <div class="navbar-brand rounded-circle child1a child" href="#">
           <img
-            src="../assets/flat_750x_075_f-pad_750x1000_f8f8f8.u1-removebg-preview.png"
+            src="../../assets/flat_750x_075_f-pad_750x1000_f8f8f8.u1-removebg-preview.png"
             alt="Bootstrap"
             width="100%"
             height="100%"
@@ -72,7 +81,7 @@ defineProps({
             </div>
           </div>
         </div>
-      </div>
+      </RouterLink>
     </div>
   </div>
 </template>

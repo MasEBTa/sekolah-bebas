@@ -119,7 +119,7 @@ const currentImage = computed(() => {
 }
 @font-face {
   font-family: "woblofont";
-  src: url("../assets/fonts/logo-font/super-woobly-font/SuperWoobly-8MJlz.ttf")
+  src: url("../../assets/fonts/logo-font/super-woobly-font/SuperWoobly-8MJlz.ttf")
     format("truetype");
   font-weight: normal;
   font-style: normal;

@@ -1,10 +1,10 @@
 <script setup>
-import Header from "../components/Header.vue";
-import MateriModal from "../components/MateriModal.vue";
+import Header from "../components/materiComponents/Header.vue";
+import MateriModal from "../components/materiComponents/MateriModal.vue";
 
 import { useRoute } from "vue-router";
 import { computed, onMounted } from "vue";
-import { useLessonStore } from "@/stores/lessonStore";
+import { useLessonStore } from "@/stores/LessonStore";
 
 // pertama aplikasi di buka isi data lesson
 import { loadLessonsFromSupabase } from "../service/fetchDummyLesson";
@@ -17,13 +17,14 @@ console.log("📍 Path dari URL:", path.value);
 
 // Reactive: ambil data dari store berdasarkan path
 const store = useLessonStore();
-const dataMapel = computed(() =>
-  store.lessons.find((item) => item.path === path.value)
-);
+// const dataMapel = computed(() =>
+//   store.lessons.find((item) => item.path === path.value)
+// );
+const dataMapel = computed(() => store.getByPath(path.value));
 // console.log("data maspel :", dataMapel);
 
 const allMapelNames = computed(() => store.allMapelNames);
-// console.log("mapelname:", allMapelNames);
+console.log("mapelname:", allMapelNames);
 
 onMounted(() => {
   console.log("✅ Data lesson di komponen:", store.lessons);
@@ -43,6 +44,7 @@ onMounted(() => {
             :deskripsi="level.deskripsi"
             :status="level.status"
             :progres="level.progress"
+            :slug="level.slug"
             :gambar="`/src/assets/${level.gambar}`"
           />
         </div>

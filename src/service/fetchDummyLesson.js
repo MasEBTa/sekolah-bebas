@@ -1,6 +1,6 @@
 // src/services/fetchLessons.js
 import { supabase } from "@/lib/supabase.js";
-import { useLessonStore } from "@/stores/lessonStore.js";
+import { useLessonStore } from "@/stores/LessonStore.js";
 
 export async function loadLessonsFromSupabase() {
   const store = useLessonStore();
@@ -11,7 +11,7 @@ export async function loadLessonsFromSupabase() {
     const { data, error } = await supabase
       .from("lessons")
       .select(
-        "id, title, description, progress, subject_id, mapel (id, nama_mapel, path, nama_app, img)"
+        "id, title, description, progress, subject_id, slug, mapel (id, nama_mapel, path, nama_app, img)"
       );
     // console.log("ini datanya", data);
 
@@ -40,6 +40,7 @@ export async function loadLessonsFromSupabase() {
         judul: lesson.title,
         deskripsi: lesson.description,
         progress: lesson.progress,
+        slug: lesson.slug,
         // gambar: null (tidak dimasukkan karena belum ada)
       });
     });
