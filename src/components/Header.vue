@@ -1,15 +1,25 @@
 <script setup>
-defineProps({
+import { computed, toRef } from "vue";
+import { useRoute } from "vue-router";
+
+const props = defineProps({
   mapelList: {
     type: Array,
     required: true,
   },
 });
 
-import { computed } from "vue"; // ✅ TAMBAHKAN INI
-import { useRoute } from "vue-router";
+const mapelList = toRef(props, "mapelList");
+console.log("mapel list", mapelList.value);
+
 const route = useRoute();
 const path = computed(() => route.path.split("/").pop());
+console.log("path", path.value);
+
+const currentImage = computed(() => {
+  const found = mapelList.value.find((item) => item.path === path.value);
+  return found ? found.img : "/img/default.png"; // fallback kalau tidak ditemukan
+});
 </script>
 
 <template>
@@ -20,17 +30,26 @@ const path = computed(() => route.path.split("/").pop());
       <a
         class="navbar-brand rounded-circle"
         href="#"
-        style="background-color: white; width: 50px; height: 50px"
+        style="
+          background-color: white;
+          width: 50px;
+          height: 50px;
+          padding: 0;
+          overflow: hidden;
+        "
       >
-        <img
-          src="../assets/flat_750x_075_f-pad_750x1000_f8f8f8.u1-removebg-preview.png"
-          alt="Bootstrap"
-          width="100%"
-          height="100%"
-        />
+        <transition name="fade" mode="out-in">
+          <img
+            :src="currentImage"
+            :key="currentImage"
+            alt="Logo Mapel"
+            width="100%"
+            height="100%"
+          />
+        </transition>
       </a>
       <div class="nav justify-content-center text-white logofont">
-        <span v-for="(item, index) in mapelList"
+        <span v-for="(item, index) in mapelList" :key="index"
           ><span v-if="path == item.path">{{ item.app }}</span></span
         >
       </div>

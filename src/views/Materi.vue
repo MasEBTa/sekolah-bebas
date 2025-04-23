@@ -23,12 +23,12 @@ const dataMapel = computed(() =>
 // console.log("data maspel :", dataMapel);
 
 const allMapelNames = computed(() => store.allMapelNames);
-// console.log("mapelname :", allMapelNames);
+// console.log("mapelname:", allMapelNames);
 
 onMounted(() => {
   console.log("✅ Data lesson di komponen:", store.lessons);
   console.log("🎯 Data berdasarkan path:", dataMapel.value);
-  console.log("📚 Daftar semua mapel:", store.allMapelNames);
+  console.log("📚 Daftar semua mapel:", allMapelNames.value);
 });
 </script>
 
@@ -42,7 +42,7 @@ onMounted(() => {
             :judul="level.judul"
             :deskripsi="level.deskripsi"
             :status="level.status"
-            :progres="level.progres"
+            :progres="level.progress"
             :gambar="`/src/assets/${level.gambar}`"
           />
         </div>

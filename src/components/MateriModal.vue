@@ -28,14 +28,48 @@ defineProps({
             </div>
             <div class="status-materi d-flex">
               <div class="statbox1">status</div>
-              <div class="statbox2">ongoing</div>
+              <div
+                :class="[
+                  progres === 100
+                    ? 'persentase100'
+                    : progres === 0
+                    ? 'persentase0'
+                    : 'persentaseTanggung',
+                  'statbox2',
+                ]"
+              >
+                {{
+                  progres === 100
+                    ? "finish"
+                    : progres === 0
+                    ? "not started"
+                    : "ongoing"
+                }}
+              </div>
             </div>
           </div>
           <div class="child2b dflex">
-            <div class="love">
+            <div
+              :class="[
+                progres === 100 ? 'love100' : progres === 0 ? 'love0' : 'loveT',
+                'love',
+              ]"
+            >
               <i class="bi bi-heart-fill"></i>
             </div>
-            <div class="persentase mt-auto">100%</div>
+            <div
+              :class="[
+                progres == 100
+                  ? 'persentase100'
+                  : progres == 0
+                  ? 'persentase0'
+                  : 'persentaseTanggung',
+                'mt-auto',
+                'persentase',
+              ]"
+            >
+              {{ progres }}%
+            </div>
           </div>
         </div>
       </div>
@@ -113,10 +147,15 @@ defineProps({
 .status-materi {
   margin-top: auto;
 }
+.statbox1 {
+  width: 3rem;
+}
+.statbox2 {
+  width: 4.3rem;
+}
 .statbox1,
 .statbox2,
 .persentase {
-  width: 4rem;
   padding-top: 0.1rem;
   padding-bottom: 0.1rem;
   font-size: 0.8rem;
@@ -143,11 +182,29 @@ defineProps({
 }
 .love {
   font-size: 2rem;
+}
+.love100 {
   color: #18175f;
 }
+.loveT {
+  color: #747373;
+}
+.love0 {
+  color: rgb(216, 214, 214);
+}
 .persentase {
-  margin-top: auto;
+  width: 3rem;
+}
+.persentase100 {
   background: linear-gradient(to right, black, #18175f, #3533cb);
+  color: white;
+}
+.persentase0 {
+  background: linear-gradient(to right, rgb(216, 214, 214), #fdfdfd, #ffffff);
+  color: rgb(0, 0, 0);
+}
+.persentaseTanggung {
+  background: linear-gradient(to right, rgb(15, 15, 15), #747373, #ffffff);
   color: white;
 }
 @media (max-width: 350px) {

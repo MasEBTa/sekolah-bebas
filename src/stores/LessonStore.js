@@ -36,6 +36,7 @@ export const useLessonStore = defineStore("lesson", {
         mapel: item.mapel,
         path: item.path,
         app: item.app,
+        img: item.img,
       }));
     },
   },
