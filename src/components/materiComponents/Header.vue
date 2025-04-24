@@ -1,6 +1,7 @@
 <script setup>
 import { computed, toRef } from "vue";
 import { useRoute } from "vue-router";
+import Menu from "../headerComponents/MenuPelajaran.vue";
 
 const props = defineProps({
   mapelList: {
@@ -53,53 +54,7 @@ const currentImage = computed(() => {
           ><span v-if="path == item.path">{{ item.app }}</span></span
         >
       </div>
-
-      <div>
-        <!-- Button trigger modal -->
-        <i
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          class="bi bi-menu-button-fill menu"
-        ></i>
-      </div>
-
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Pilih Pelajaran
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="list-group">
-              <router-link
-                v-for="(item, index) in mapelList"
-                :key="index"
-                class="list-group-item list-group-item-action"
-                :to="`/${item.path}`"
-              >
-                {{ item.mapel }}
-              </router-link>
-            </div>
-
-            <div class="modal-footer"></div>
-          </div>
-        </div>
-      </div>
+      <div class="menu"><Menu :mapelList="mapelList" /></div>
     </div>
   </header>
 </template>

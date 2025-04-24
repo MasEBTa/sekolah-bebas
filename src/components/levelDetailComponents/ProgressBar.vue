@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-1 pt-1 d-flex">
+  <div class="d-flex align-items-center">
     <div
       class="progress-logo main-bg-col d-flex justify-content-center align-items-center"
     >
@@ -31,7 +31,7 @@ defineProps({
 }
 .progress-wrapper {
   position: relative;
-  height: 2.5rem;
+  height: 1.5rem;
   border: 1px solid #ccc;
   background-color: #ffffff;
   border-radius: 1rem;

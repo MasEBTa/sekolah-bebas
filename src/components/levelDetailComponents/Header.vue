@@ -28,7 +28,7 @@ function goBack() {
         ><i class="bi bi-arrow-bar-left main-color" style="margin: 0"></i>III
       </a>
       <div
-        class="col-8 navbar-brand d-flex justify-content-center"
+        class="col-8 navbar-brand d-flex justify-content-center align-items-center"
         style="overflow: hidden"
       >
         <span style="width: 10%" class="main-color">
@@ -49,10 +49,10 @@ function goBack() {
       </div>
 
       <div
-        class="col-2 navbar-brand d-flex justify-content-end align-items-center"
+        class="col-2 d-flex justify-content-end align-items-center main-color"
       >
         <!-- Button trigger modal -->
-        <i type="button" class="bi bi-menu-button-fill"></i>
+        <i class="bi bi-gear-wide-connected"></i>
       </div>
     </div>
   </header>
@@ -61,5 +61,21 @@ function goBack() {
 <style scoped>
 .row {
   --bs-navbar-brand-margin-end: 0;
+}
+.main-color {
+  padding-top: var(--bs-navbar-brand-padding-y);
+  padding-bottom: var(--bs-navbar-brand-padding-y);
+  margin-right: var(--bs-navbar-brand-margin-end);
+  font-size: var(--bs-navbar-brand-font-size);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.main-color:hover {
+  color: rgb(135, 139, 139);
+}
+header {
+  --bs-navbar-padding-y: 0;
+  --bs-navbar-padding-x: 0;
+  --bs-navbar-brand-padding-y: 0.1rem;
 }
 </style>

@@ -8,19 +8,17 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="container" style="padding-top: 0.5rem">
-    <div
-      class="card card-bg-image"
-      :style="{
-        backgroundImage: `url(${
-          data.gambar || '/img/barab/leveldetail/IQRA-6-full-512.jpg'
-        })`,
-      }"
-    >
-      <div class="card-overlay">
-        <h5 class="card-title">{{ data.judul }}</h5>
-        <p class="card-text">{{ data.deskripsi }}</p>
-      </div>
+  <div
+    class="card card-bg-image"
+    :style="{
+      backgroundImage: `url(${
+        data.gambar || '/img/barab/leveldetail/IQRA-6-full-512.jpg'
+      })`,
+    }"
+  >
+    <div class="card-overlay">
+      <h5 class="card-title">{{ data.judul }}</h5>
+      <p class="card-text">{{ data.deskripsi }}</p>
     </div>
   </div>
 </template>
