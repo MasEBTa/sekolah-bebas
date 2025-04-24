@@ -20,14 +20,20 @@ function goBack() {
     class="navbar custom-gradient d-flex justify-content-between align-items-center shadow"
   >
     <div class="row" style="width: 102%">
-      <a href="#" class="col-2 navbar-brand" @click="goBack"
-        ><i class="bi bi-arrow-bar-left" style="margin: 0"></i>III
+      <a
+        href="#"
+        class="col-2 navbar-brand main-color"
+        @click="goBack"
+        style="font-weight: bold"
+        ><i class="bi bi-arrow-bar-left main-color" style="margin: 0"></i>III
       </a>
       <div
         class="col-8 navbar-brand d-flex justify-content-center"
         style="overflow: hidden"
       >
-        <span style="width: 10%"> <i class="bi bi-geo-alt-fill"></i></span>
+        <span style="width: 10%" class="main-color">
+          <i class="bi bi-geo-alt-fill"></i
+        ></span>
         <span
           style="
             width: 70%;

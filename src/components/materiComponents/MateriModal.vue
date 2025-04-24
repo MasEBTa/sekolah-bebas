@@ -40,11 +40,11 @@ const mapel = route.params.mapel;
               <div
                 :class="[
                   progres === 100
-                    ? 'persentase100'
+                    ? 'persentase100 main-bg-col'
                     : progres === 0
                     ? 'persentase0'
                     : 'persentaseTanggung',
-                  'statbox2',
+                  'statbox2 main-bg-col',
                 ]"
               >
                 {{
@@ -60,7 +60,11 @@ const mapel = route.params.mapel;
           <div class="child2b dflex">
             <div
               :class="[
-                progres === 100 ? 'love100' : progres === 0 ? 'love0' : 'loveT',
+                progres === 100
+                  ? 'main-color'
+                  : progres === 0
+                  ? 'love0'
+                  : 'loveT',
                 'love',
               ]"
             >
@@ -69,7 +73,7 @@ const mapel = route.params.mapel;
             <div
               :class="[
                 progres == 100
-                  ? 'persentase100'
+                  ? 'persentase100 main-bg-col'
                   : progres == 0
                   ? 'persentase0'
                   : 'persentaseTanggung',
@@ -176,7 +180,6 @@ const mapel = route.params.mapel;
   margin-right: 0.3rem;
 }
 .statbox2 {
-  background: linear-gradient(to right, black, #18175f, #3533cb);
   color: white;
 }
 
@@ -192,9 +195,6 @@ const mapel = route.params.mapel;
 .love {
   font-size: 2rem;
 }
-.love100 {
-  color: #18175f;
-}
 .loveT {
   color: #747373;
 }
@@ -205,7 +205,6 @@ const mapel = route.params.mapel;
   width: 3rem;
 }
 .persentase100 {
-  background: linear-gradient(to right, black, #18175f, #3533cb);
   color: white;
 }
 .persentase0 {

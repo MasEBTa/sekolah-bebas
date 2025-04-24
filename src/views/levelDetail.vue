@@ -2,6 +2,7 @@
 // header
 import Header from "../components/levelDetailComponents/Header.vue";
 import Hero from "../components/levelDetailComponents/HeroComponent.vue";
+import ProgresBar from "../components/levelDetailComponents/ProgressBar.vue";
 
 import { computed } from "vue";
 
@@ -22,6 +23,7 @@ console.log("ini", data.value);
   <div>
     <Header :judul="data" />
     <Hero :data="data" />
+    <ProgresBar :progres="90" />
   </div>
 </template>
 
