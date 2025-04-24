@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Materi from "../views/Materi.vue";
 import DetailLesson from "../views/levelDetail.vue";
+import scrollBehavior from "../service/scrollBehavior";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,7 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
   ],
+  scrollBehavior,
 });
 
 export default router;
