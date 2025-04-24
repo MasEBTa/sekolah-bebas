@@ -11,6 +11,6 @@ import { RouterLink, RouterView } from "vue-router";
   background: linear-gradient(to right, black, #18175f, #3533cb);
 }
 .main-color {
-  color: #18175f;
+  color: #141361;
 }
 </style>

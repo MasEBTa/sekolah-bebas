@@ -4,6 +4,7 @@ import Header from "../components/levelDetailComponents/Header.vue";
 import Hero from "../components/levelDetailComponents/HeroComponent.vue";
 import ProgresBar from "../components/levelDetailComponents/ProgressBar.vue";
 import card from "../components/levelDetailComponents/CardDetailLevel.vue";
+import BottomNav from "../components/navComponents/BottomNav.vue";
 
 import { computed } from "vue";
 
@@ -28,10 +29,22 @@ const data = computed(() => store.getLesson(mapel, slug));
     <div class="container mt-1 pt-1">
       <ProgresBar :progres="90" />
     </div>
-    <div class="container">
+    <div class="container space">
       <card v-for="n in 4" :key="n" />
     </div>
+    <BottomNav class="bottomnav" :home="mapel" />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 768px) {
+  .bottomnav {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .space {
+    padding-bottom: 4.2rem;
+  }
+}
+</style>

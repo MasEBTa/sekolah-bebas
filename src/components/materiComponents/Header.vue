@@ -1,7 +1,7 @@
 <script setup>
 import { computed, toRef } from "vue";
 import { useRoute } from "vue-router";
-import Menu from "../headerComponents/MenuPelajaran.vue";
+import Menu from "../navComponents/MenuPelajaran.vue";
 
 const props = defineProps({
   mapelList: {
