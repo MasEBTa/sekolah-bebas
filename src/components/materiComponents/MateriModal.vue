@@ -129,11 +129,13 @@ const mapel = route.params.mapel;
 }
 .child2a {
   flex: 1;
+  width: 20%;
   padding: 0.3rem 0 0.3rem 0;
 }
 .child1b {
   /* background-color: blue; */
   flex: 2;
+  width: 80%;
   padding-left: 0.5rem;
   flex-direction: column;
 }
@@ -151,6 +153,12 @@ const mapel = route.params.mapel;
 }
 .judul-materi {
   font-size: 1rem;
+}
+.penjelasan-materi {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .progress-materi {
   font-size: 0.6rem;
@@ -186,7 +194,7 @@ const mapel = route.params.mapel;
 /* materi kanan */
 .child2b {
   height: 100%;
-  flex: 1;
+  width: 20%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

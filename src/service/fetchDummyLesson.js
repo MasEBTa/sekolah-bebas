@@ -11,7 +11,7 @@ export async function loadLessonsFromSupabase() {
     const { data, error } = await supabase
       .from("lessons")
       .select(
-        "id, title, description, progress, subject_id, slug, image_url, logo_url, mapel (id, nama_mapel, path, nama_app, img)"
+        "id, title, description, progress, subject_id, order, slug, image_url, logo_url, mapel (id, nama_mapel, path, nama_app, img)"
       );
     // console.log("ini datanya", data);
 
@@ -43,6 +43,11 @@ export async function loadLessonsFromSupabase() {
         slug: lesson.slug,
         gambar: lesson.image_url,
         logo: lesson.logo_url,
+        urutan: lesson.order,
+      });
+      // sort tiap level di dalam grouped
+      Object.values(grouped).forEach((group) => {
+        group.levels.sort((a, b) => a.urutan - b.urutan);
       });
     });
 
