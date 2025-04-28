@@ -9,9 +9,7 @@
       <div class="right d-flex flex-column">
         <div class="atas flex-grow-1">
           <h1>{{ judul }}</h1>
-          <p>
-            {{ deskripsi }}
-          </p>
+          <p>{{ deskripsi }} {{ lastgroup }}</p>
         </div>
         <div class="bawah d-flex justify-content-between">
           <span>{{ progres }}/100</span>
@@ -29,6 +27,7 @@ defineProps({
   deskripsi: String,
   progres: Number,
   gambar: String,
+  lastgroup: Boolean,
 });
 </script>
 

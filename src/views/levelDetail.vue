@@ -48,15 +48,20 @@ onMounted(() => {
       <div v-if="loading">Loading...</div>
       <div v-if="error">Error: {{ error }}</div>
       <div v-else>
-        <card
+        <router-link
           v-for="item in storeMaterialLesson.getAll"
           :key="item.id"
-          :id="item.id"
-          :deskripsi="item.description"
-          :judul="item.name"
-          :gambar="item.logo_picture"
-          :progres="item.presentase"
-        />
+          class="list-group-item list-group-item-action"
+          :to="`/${mapel}/${item.lastgroup ? 'show' : 'd'}/${item.id}`"
+        >
+          <card
+            :id="item.id"
+            :deskripsi="item.description"
+            :judul="item.name"
+            :gambar="item.logo_picture"
+            :progres="item.presentase"
+            :lastgroup="item.lastgroup"
+        /></router-link>
       </div>
     </div>
     <BottomNav class="bottomnav" :home="mapel" />
