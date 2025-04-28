@@ -16,7 +16,7 @@ const router = createRouter({
       component: Materi,
     },
     {
-      path: "/:mapel/detail/:idmateri",
+      path: "/:mapel/detail/:slugmateri/:id",
       name: "materiDetail",
       component: DetailLesson,
     },

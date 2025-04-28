@@ -3,21 +3,18 @@
     <div class="card-body d-flex wrapper">
       <div class="left">
         <div class="gbr">
-          <img src="/img/barab/leveldetail/level1/ا و ب.png" alt="cover" />
+          <img :src="gambar" alt="cover" />
         </div>
       </div>
       <div class="right d-flex flex-column">
         <div class="atas flex-grow-1">
-          <h1>Iqra 1</h1>
+          <h1>{{ judul }}</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore aut
-            ex in quaerat cupiditate consectetur molestias voluptates, eaque
-            asperiores quo nostrum id accusantium eum amet iure eos debitis, ad
-            quidem.
+            {{ deskripsi }}
           </p>
         </div>
         <div class="bawah d-flex justify-content-between">
-          <span>30/100</span>
+          <span>{{ progres }}/100</span>
           <div class="pelajari main-bg-col">pelajari</div>
         </div>
       </div>
@@ -25,7 +22,22 @@
   </div>
 </template>
 
+<script setup>
+defineProps({
+  id: String,
+  judul: String,
+  deskripsi: String,
+  progres: Number,
+  gambar: String,
+});
+</script>
+
 <style scoped>
+h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .card {
   --bs-card-spacer-y: 0.5rem;
   --bs-card-spacer-x: 0.5rem;
@@ -34,11 +46,16 @@
   border-radius: 1rem;
 }
 .isimateri .left {
-  flex: 1;
+  width: 50%;
   margin-right: 0.5rem;
   max-width: 10rem;
   /* min-height: 100%; */
   min-height: 5rem;
+}
+@media (min-width: 380px) {
+  .isimateri .left {
+    width: 30%;
+  }
 }
 .isimateri .left .gbr {
   width: 100%;
@@ -46,7 +63,7 @@
   max-height: 7rem;
   overflow: hidden;
   border-radius: 1rem;
-  background: red;
+  background: rgb(255, 255, 255);
 }
 .gbr img {
   width: 100%;
@@ -54,7 +71,7 @@
   object-fit: cover;
 }
 .isimateri .right {
-  flex: 2;
+  width: 80%;
   max-height: 7rem;
 }
 .right .atas {

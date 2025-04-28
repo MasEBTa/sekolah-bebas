@@ -1,5 +1,6 @@
 <script setup>
 defineProps({
+  id: String,
   judul: String,
   deskripsi: String,
   status: String,
@@ -18,7 +19,12 @@ const mapel = route.params.mapel;
   <div class="cover">
     <div class="card">
       <RouterLink
-        :to="`/${mapel}/detail/${slug}`"
+        :to="{
+          path: `/${mapel}/detail/${slug}/${id}`,
+          state: {
+            id: 1,
+          },
+        }"
         class="card-body text-decoration-none"
       >
         <div class="navbar-brand rounded-circle child1a child" href="#">

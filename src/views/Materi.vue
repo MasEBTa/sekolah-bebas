@@ -40,6 +40,7 @@ onMounted(() => {
       <div v-if="dataMapel">
         <div v-for="level in dataMapel.levels" :key="level.id">
           <MateriModal
+            :id="level.id"
             :judul="level.judul"
             :deskripsi="level.deskripsi"
             :status="level.status"

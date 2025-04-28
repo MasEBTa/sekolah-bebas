@@ -12,17 +12,32 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const mapel = route.params.mapel;
-const slug = route.params.idmateri;
+const slug = route.params.slugmateri;
 
 // lesson store
 import { useLessonStore } from "@/stores/LessonStore";
-const store = useLessonStore();
-const data = computed(() => store.getLesson(mapel, slug));
+const storeLesson = useLessonStore();
+const data = computed(() => storeLesson.getLesson(mapel, slug));
+
+// ambil data
+import { onMounted } from "vue";
+import { useFetchMaterialLessons } from "@/stores/compossable/useFetchMaterialLessons";
+import { useMaterialLessonStore } from "@/stores/materialLessonStore";
+const { fetchLessons, loading, error } = useFetchMaterialLessons();
+const storeMaterialLesson = useMaterialLessonStore();
+
+const lessonId = route.params.id;
+
+onMounted(() => {
+  fetchLessons(lessonId);
+});
 </script>
 
 <template>
   <div>
-    <Header :judul="data" />
+    <div class="sticky-header">
+      <Header :judul="data" />
+    </div>
     <div class="container" style="padding-top: 0.5rem">
       <Hero :data="data" />
     </div>
@@ -30,13 +45,32 @@ const data = computed(() => store.getLesson(mapel, slug));
       <ProgresBar :progres="90" />
     </div>
     <div class="container space">
-      <card v-for="n in 4" :key="n" />
+      <div v-if="loading">Loading...</div>
+      <div v-if="error">Error: {{ error }}</div>
+      <div v-else>
+        <card
+          v-for="item in storeMaterialLesson.getAll"
+          :key="item.id"
+          :id="item.id"
+          :deskripsi="item.description"
+          :judul="item.name"
+          :gambar="item.logo_picture"
+          :progres="item.presentase"
+        />
+      </div>
     </div>
     <BottomNav class="bottomnav" :home="mapel" />
   </div>
 </template>
 
 <style scoped>
+/* Sticky Header */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white; /* atau ganti sesuai warna header */
+}
 @media (min-width: 768px) {
   .bottomnav {
     display: none;
