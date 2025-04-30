@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Materi from "../views/Materi.vue";
 import DetailLesson from "../views/levelDetail.vue";
 import scrollBehavior from "../service/scrollBehavior";
-import ShowMateri from "../views/ShowMateriView.vue";
+import ShowMateri from "../views/StrokeWriter.vue";
 import ShowDetail from "../views/PartitionLevelDetail.vue";
 
 const router = createRouter({
