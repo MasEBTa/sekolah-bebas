@@ -7,7 +7,14 @@
         <span class="logo-text">LOGO</span>
       </div>
       <div class="right">
-        <i class="bi bi-arrow-bar-up"></i>
+        <RouterLink
+          :to="{
+            path: `/canvas`,
+          }"
+          class="card-body text-decoration-none"
+        >
+          <i class="bi bi-vector-pen"></i
+        ></RouterLink>
       </div>
     </div>
 
@@ -52,7 +59,12 @@
 }
 
 .right i {
-  font-size: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.right i:hover {
+  color: #b56e3f;
+  /* transform: scale(3); */
 }
 
 /* Bullet slider */

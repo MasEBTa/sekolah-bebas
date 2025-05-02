@@ -33,9 +33,9 @@ const router = createRouter({
       component: ShowDetail,
     },
     {
-      path: "/about",
-      name: "about",
-      component: () => import("../views/AboutView.vue"),
+      path: "/canvas",
+      name: "canvas",
+      component: () => import("../views/CanvasView.vue"),
     },
   ],
   scrollBehavior,
