@@ -34,6 +34,8 @@ const props = defineProps({
   size: { type: Number, default: 256 },
   viewBox: { type: Number, default: 24 },
   trial: { type: Number, default: 3 },
+  avgsdL: { type: Number, default: 20 },
+  avgsdH: { type: Number, default: 50 },
 
   // Warna referensi
   defaultColor: { type: String, default: "#ccc" },
@@ -100,7 +102,9 @@ function isSimilarPath(userPath, refPath) {
 
   const avgDist = totalDist / minLen;
 
-  return !(avgDist > 50 || avgDist < 10);
+  console.log(avgDist);
+
+  return !(avgDist > props.avgsdH || avgDist < props.avgsdL);
 }
 
 function handleFinish(userPath) {

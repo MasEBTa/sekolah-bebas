@@ -10,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/barab", // default ke Bahasa Arab
+      redirect: "/math", // default ke Bmatematika
     },
     {
       path: "/:mapel", // path dinamis seperti /barab, /baing, dll

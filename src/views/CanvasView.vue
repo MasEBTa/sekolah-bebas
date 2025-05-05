@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
 import Canvas from "../components/Canvas.vue";
 </script>
 
