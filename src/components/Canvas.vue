@@ -81,7 +81,7 @@ function onColorInput() {
   const luminance = getLuminance(rgb);
   console.log(luminance);
 
-  if (luminance > 0.8) {
+  if (luminance > 0.95) {
     // Kembalikan warna picker ke lastValidColor
     console.log("Warna terlalu terang!", selected);
     setColor(lastValidColor.toLowerCase());
