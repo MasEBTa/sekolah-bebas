@@ -2,10 +2,12 @@
   <header class="main-header">
     <!-- Header Bar -->
     <div class="header-bar">
-      <div class="left">
-        <i class="bi bi-arrow-left"></i>
-        <span class="logo-text">LOGO</span>
-      </div>
+      <a href="#" @click="goBack">
+        <div class="left">
+          <i class="bi bi-arrow-left"></i>
+          <span class="logo-text">LOGO</span>
+        </div></a
+      >
       <div class="right">
         <RouterLink
           :to="{
@@ -26,6 +28,15 @@
     </div>
   </header>
 </template>
+
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+function goBack() {
+  router.go(-1);
+}
+</script>
 
 <style scoped>
 .main-header {
@@ -88,5 +99,8 @@
   height: 12px;
   background-color: green; /* abu tua */
   border-radius: 9999px;
+}
+a {
+  text-decoration: none;
 }
 </style>

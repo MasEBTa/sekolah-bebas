@@ -13,7 +13,9 @@ const stroke = [
     <StrokeSvg class="stroke" :strokesData="stroke" viewBox="24" />
 
     <div class="bullet-container">
-      <div class="main-bg-col butt">Next</div>
+      <router-link :to="'/math/show/2'">
+        <div class="main-bg-col butt">Next</div></router-link
+      >
     </div>
   </div>
 </template>
