@@ -1,42 +1,75 @@
 <script setup>
 import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+
+import Header from "../components/soalmateri/header/Header.vue";
+import PathEssayQuestion from "../components/soalmateri/PathEssayQuestion.vue";
+import getSpecialData from "../service/soal/getSpecialData";
+import NextButton from "../components/soalmateri/NextButton.vue"; // Tombol Next
 
 const route = useRoute();
 const path = computed(() => route.path.split("/").pop() || "");
 console.log("📍 Path dari URL:", path.value);
 
-import Header from "../components/soalmateri/header/Header.vue";
-import StrokeView from "../components/soalmateri/StrokeView.vue";
-import StrokePlayer from "../components/soalmateri/StrokePlay.vue";
-import StrokeWriter from "../components/soalmateri/StrokeWriter.vue";
-// import NumberQuestion from "../components/soalmateri/NumberQuestion.vue";
+const dataquery = JSON.parse(route.query.needData || "null");
+
+const dataSoal = ref([]);
+const currentSoalIndex = ref(0); // Menyimpan nomor soal aktif
+const isAnswered = ref(false); // Menyimpan status apakah soal sudah dijawab
+
+// Mendapatkan data soal jika dataquery tersedia
+if (dataquery != null) {
+  dataSoal.value = getSpecialData(dataquery);
+  console.log("data soal", dataSoal.value);
+}
+
+// Fungsi untuk berpindah ke soal berikutnya
+function nextSoal() {
+  if (currentSoalIndex.value < dataSoal.value.length - 1) {
+    currentSoalIndex.value++;
+    isAnswered.value = false; // Reset status jawaban pada soal berikutnya
+  }
+}
+
+// Fungsi untuk menerima event "answered" dari PathEssayQuestion
+function handleAnswered(status) {
+  isAnswered.value = status; // Update status isAnswered
+}
 </script>
 
 <template>
   <div style="height: 15%">
     <Header />
   </div>
-  <div style="height: 85%" v-if="path === '3'">
-    <StrokeWriter />
+
+  <!-- Menampilkan soal aktif berdasarkan currentSoalIndex -->
+  <div v-if="dataSoal.length > 0">
+    <div
+      v-for="(soal, index) in dataSoal"
+      :key="soal.nomor"
+      v-show="index === currentSoalIndex"
+    >
+      <!-- Komponen berdasarkan tipe -->
+      <PathEssayQuestion
+        v-if="soal.tipe === 'esay-singkat-stroke'"
+        :question="soal"
+        @answered="handleAnswered"
+      />
+      <!-- Tambah tipe lain jika ada -->
+      <div v-else>
+        <p class="text-red-500">Tipe soal belum didukung: {{ soal.tipe }}</p>
+      </div>
+    </div>
+
+    <!-- Tombol Next untuk berpindah soal -->
+    <NextButton
+      v-if="isAnswered"
+      @click="nextSoal"
+      :disabled="currentSoalIndex === dataSoal.length - 1"
+    />
   </div>
-  <div style="height: 85%" v-else-if="path === '2'">
-    <StrokePlayer />
-  </div>
-  <div style="height: 85%" v-else>
-    <StrokeView />
-  </div>
-  <!-- <div style="height: 85%" v-else>
-    <NumberQuestion
-      :question="{
-        type: 'multiple_choice_image',
-        question: 'Yang manakah angka satu?',
-        options: [
-          { label: '1', image: '/images/angka-1.svg' },
-          { label: '2', image: '/images/angka-2.svg' },
-        ],
-        answer: '1',
-      }"
-    /> 
-  </div>-->
 </template>
+
+<style scoped>
+/* Tambahan styling jika perlu */
+</style>

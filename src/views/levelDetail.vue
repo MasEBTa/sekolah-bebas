@@ -52,8 +52,12 @@ onMounted(() => {
           v-for="item in storeMaterialLesson.getAll"
           :key="item.id"
           class="list-group-item list-group-item-action"
-          :to="`/${mapel}/${item.lastgroup ? 'show' : 'd'}/${item.id}`"
+          :to="{
+            path: `/${mapel}/${item.lastgroup ? 'show' : 'd'}/${item.id}`,
+            query: { needData: JSON.stringify(item.needData) },
+          }"
         >
+          {{ item.needData }}
           <card
             :id="item.id"
             :deskripsi="item.description"
