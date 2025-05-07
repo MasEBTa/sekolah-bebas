@@ -19,7 +19,7 @@ console.log("path", path.value);
 
 const currentImage = computed(() => {
   const found = mapelList.value.find((item) => item.path === path.value);
-  return found ? found.img : "/img/default.png"; // fallback kalau tidak ditemukan
+  return found ? found.img : "/sekolah-bebas/img/default.png"; // fallback kalau tidak ditemukan
 });
 
 // --- Scroll Tracking ---
