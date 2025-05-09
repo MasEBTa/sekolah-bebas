@@ -1,5 +1,5 @@
 <template>
-  <Header title="Login" />
+  <Header title="Daftar" />
 
   <div class="p-4 w-100 mx-auto ji-c">
     <form @submit.prevent="onSignup">
