@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Materi from "../views/Materi.vue";
 import DetailLesson from "../views/levelDetail.vue";
@@ -22,21 +22,25 @@ const routes = [
     path: "/:mapel/detail/:slugmateri/:id",
     name: "materiDetail",
     component: DetailLesson,
+    meta: { requiresAuth: true },
   },
   {
     path: "/:mapel/show/:id",
     name: "showMateri",
     component: ShowMateri,
+    meta: { requiresAuth: true },
   },
   {
     path: "/:mapel/d/:id",
     name: "showDetail",
     component: ShowDetail,
+    meta: { requiresAuth: true },
   },
   {
     path: "/canvas",
     name: "canvas",
     component: () => import("../views/CanvasView.vue"),
+    meta: { requiresAuth: true },
   },
   { path: "/login", component: () => import("@/views/auth/LoginPage.vue") },
   {
@@ -48,10 +52,15 @@ const routes = [
     name: "emailVerification",
     component: () => import("@/views/auth/VerificationSent.vue"),
   },
+  {
+    path: "/email-verified",
+    name: "emailVerified",
+    component: () => import("@/views/auth/VerifiedEamail.vue"),
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior,
 });
