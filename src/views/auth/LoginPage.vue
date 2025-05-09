@@ -22,6 +22,14 @@
       <button class="btn w-full main-bg-col text-white">Login</button>
     </form>
     <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
+    <div class="mt-2">
+      Tidak punya akun?
+      <router-link
+        to="/signup"
+        class="block mt-4 text-sm text-primary text-center"
+        >Daftar di sini
+      </router-link>
+    </div>
   </div>
 </template>
 
