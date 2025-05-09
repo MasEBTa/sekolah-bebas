@@ -31,7 +31,7 @@ const scrollToTop = () => {
 
 <template>
   <header
-    class="navbar custom-gradient px-0 py-0 d-flex justify-content-between align-items-center sticky-header shadow"
+    class="navbar main-bg-col px-0 py-0 d-flex justify-content-between align-items-center sticky-header shadow"
   >
     <div class="container">
       <div class="nav justify-content-center text-white logofont">
@@ -47,14 +47,6 @@ const scrollToTop = () => {
 </template>
 
 <style scoped>
-.custom-gradient {
-  background: linear-gradient(
-    to right,
-    black,
-    #18175f,
-    #3533cb
-  ); /* Gradient dari hitam ke indigo */
-}
 .logofont {
   font-family: "woblofont", sans-serif;
   font-size: 1rem;

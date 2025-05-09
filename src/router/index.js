@@ -10,11 +10,13 @@ const routes = [
   {
     path: "/",
     redirect: "/math", // default ke Bmatematika
+    meta: { requiresAuth: true },
   },
   {
     path: "/:mapel", // path dinamis seperti /barab, /baing, dll
     name: "materi",
     component: Materi,
+    meta: { requiresAuth: true },
   },
   {
     path: "/:mapel/detail/:slugmateri/:id",
@@ -41,7 +43,11 @@ const routes = [
     path: "/signup",
     component: () => import("@/views/auth/SignupPage.vue"),
   },
-  // { path: '/', component: () => import('@/views/HomePage.vue'), meta: { requiresAuth: true } },
+  {
+    path: "/email-verification",
+    name: "emailVerification",
+    component: () => import("@/views/auth/VerificationSent.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -52,6 +58,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore();
+  console.log("Current user:", auth.user);
   if (!auth.user) await auth.fetchUserAndProfile();
 
   if (to.meta.requiresAuth && !auth.user) {

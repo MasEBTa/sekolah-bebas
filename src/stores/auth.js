@@ -9,19 +9,42 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async fetchUserAndProfile() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      this.user = session?.user;
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+      console.log("📦 Session:", sessionData);
 
-      if (this.user) {
-        const { data, error } = await supabase
+      if (!sessionData.session) {
+        console.warn("⚠️ No session found, user not logged in.");
+        this.user = null;
+        this.profile = null;
+        return;
+      }
+
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("❌ Error fetching user:", error);
+        return;
+      }
+
+      this.user = user;
+      console.log("✅ Current user:", user);
+
+      if (user) {
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("*")
-          .eq("id", this.user.id)
+          .eq("id", user.id)
           .single();
 
-        if (!error) this.profile = data;
+        if (profileError) {
+          console.error("❌ Error fetching profile:", profileError);
+        } else {
+          this.profile = profile;
+        }
       }
     },
 
@@ -48,23 +71,30 @@ export const useAuthStore = defineStore("auth", {
 
       if (error) throw error;
 
-      // Setelah user dibuat, insert data profil
       const user = data.user;
+
+      if (user && !data.session) {
+        return data; // Email perlu dikonfirmasi, stop di sini
+      }
 
       if (user) {
         const { error: insertError } = await supabase.from("profiles").insert([
           {
-            id: user.id, // id Supabase auth
+            id: user.id,
             email: user.email,
-            role: role,
+            role,
             created_at: new Date(),
           },
         ]);
 
+        cpp;
+        Copy;
+        Edit;
         if (insertError) throw insertError;
       }
 
       await this.fetchUserAndProfile();
+      return data;
     },
   },
 });

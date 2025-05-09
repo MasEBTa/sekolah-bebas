@@ -48,7 +48,7 @@ const scrollToTop = () => {
 <template>
   <header
     :class="[
-      'navbar custom-gradient main-bg-col shadow',
+      'navbar main-bg-col main-bg-col shadow',
       { scrolled: isScrolled, normal: !isScrolled },
       { stickyHeader: isScrolled, blockedHeader: !isScrolled },
     ]"
