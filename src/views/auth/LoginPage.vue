@@ -19,7 +19,10 @@
         />
       </div>
 
-      <button class="btn w-full main-bg-col text-white">Login</button>
+      <button class="btn w-100 main-bg-col text-white" :disabled="isLoading">
+        <span v-if="isLoading">Loading...</span>
+        <span v-else>Login</span>
+      </button>
     </form>
     <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
     <div class="mt-2">
@@ -61,9 +64,10 @@ const password = ref("");
 const error = ref("");
 const router = useRouter();
 const auth = useAuthStore();
-
+const isLoading = ref(false);
 const onLogin = async () => {
   error.value = "";
+  isLoading.value = true;
 
   try {
     await auth.login(email.value, password.value);
@@ -79,6 +83,8 @@ const onLogin = async () => {
     } else {
       error.value = err.message;
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>

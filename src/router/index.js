@@ -5,6 +5,7 @@ import DetailLesson from "../views/levelDetail.vue";
 import scrollBehavior from "../service/scrollBehavior";
 import ShowMateri from "../views/SoalMateri.vue";
 import ShowDetail from "../views/PartitionLevelDetail.vue";
+import { useLoadingStore } from "../stores/LoadingStore";
 
 const routes = [
   {
@@ -55,7 +56,12 @@ const routes = [
   {
     path: "/email-verified",
     name: "emailVerified",
-    component: () => import("@/views/auth/VerifiedEamail.vue"),
+    component: () => import("@/views/auth/VerifiedEmail.vue"),
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    component: () => import("@/views/auth/Logout.vue"),
   },
 ];
 
@@ -74,7 +80,21 @@ router.beforeEach(async (to, from, next) => {
     return next("/login");
   }
 
+  // Jika user sudah login, dan mencoba akses login/signup
+  if (auth.user && (to.path === "/login" || to.path === "/signup")) {
+    return next("/");
+  }
+
+  // loading
+  const loadingStore = useLoadingStore();
+  loadingStore.startLoading(); // Tampilkan loading
+
   next();
+});
+
+router.afterEach(() => {
+  const loadingStore = useLoadingStore();
+  loadingStore.stopLoading(); // Sembunyikan loading setelah navigasi selesai
 });
 
 export default router;

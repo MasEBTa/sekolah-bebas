@@ -19,7 +19,17 @@
           class="input mb-2 w-100"
         />
       </div>
-      <button class="btn w-100 main-bg-col text-white">Sign Up</button>
+      <button
+        class="btn w-100 main-bg-col text-white d-flex align-items-center justify-content-center"
+        :disabled="loading"
+      >
+        <span
+          v-if="loading"
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        />
+        {{ loading ? "Mendaftar..." : "Sign Up" }}
+      </button>
     </form>
     <p v-if="error" class="text-danger mt-2">{{ error }}</p>
     <div class="mt-2">
@@ -56,6 +66,16 @@ import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Header from "@/components/auth/Header.vue";
 
+const loading = ref(false);
+
+// auth.signUp({
+//   email,
+//   password,
+//   options: {
+//     emailRedirectTo: "/email-verified",
+//   },
+// });
+
 const email = ref("");
 const password = ref("");
 const error = ref("");
@@ -63,11 +83,14 @@ const auth = useAuthStore();
 const router = useRouter();
 const onSignup = async () => {
   error.value = "";
+  loading.value = true;
   try {
     await auth.signup(email.value, password.value);
     router.push(`/email-verification?email=${encodeURIComponent(email.value)}`);
   } catch (err) {
     error.value = err.message;
+  } finally {
+    loading.value = false;
   }
 };
 </script>

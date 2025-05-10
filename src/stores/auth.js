@@ -69,32 +69,33 @@ export const useAuthStore = defineStore("auth", {
         password,
       });
 
-      if (error) throw error;
+      if (error) throw error; // Handle error jika signup gagal
 
       const user = data.user;
 
-      if (user && !data.session) {
-        return data; // Email perlu dikonfirmasi, stop di sini
-      }
-
+      // Insert profil meskipun belum login (email belum diverifikasi)
       if (user) {
         const { error: insertError } = await supabase.from("profiles").insert([
           {
-            id: user.id,
+            id: user.id, // ID sudah ada karena Supabase memberikan user ID
             email: user.email,
             role,
-            created_at: new Date(),
+            created_at: new Date().toISOString(), // Gunakan ISO string format
           },
         ]);
 
-        cpp;
-        Copy;
-        Edit;
-        if (insertError) throw insertError;
+        if (insertError) throw insertError; // Handle error saat insert profil
       }
 
-      await this.fetchUserAndProfile();
-      return data;
+      // Kalau ada session (berarti login otomatis), fetch user+profile
+      if (data.session) {
+        await this.fetchUserAndProfile();
+      } else {
+        // Jika tidak ada session, user hanya mendaftar dan harus verifikasi email dulu
+        console.log("User has been signed up but needs email verification.");
+      }
+
+      return data; // Return data signup yang berisi user dan session (jika ada)
     },
   },
 });
