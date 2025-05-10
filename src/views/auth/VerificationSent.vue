@@ -64,6 +64,48 @@ onMounted(async () => {
     router.push("/login");
   }
 });
+
+const resendVerification = async () => {
+  error.value = "";
+  success.value = false;
+
+  try {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData.session?.user;
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    const { error: resendError } = await supabase.auth.resend({
+      type: "signup",
+      email: user.email,
+    });
+
+    if (resendError) {
+      throw resendError;
+    }
+
+    success.value = true;
+    startCountdown(); // Mulai countdown agar tombol disabled sementara
+  } catch (err) {
+    error.value = err.message || "Gagal mengirim ulang email verifikasi.";
+  }
+};
+
+const startCountdown = () => {
+  countdown.value = 60; // 60 detik
+  isDisabled.value = true;
+
+  const timer = setInterval(() => {
+    countdown.value--;
+    if (countdown.value <= 0) {
+      clearInterval(timer);
+      isDisabled.value = false;
+    }
+  }, 1000);
+};
 </script>
 
 <style scoped>

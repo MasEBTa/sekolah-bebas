@@ -63,32 +63,35 @@ form {
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { supabase } from "@/lib/supabase"; // pastikan ini file koneksi kamu
 import Header from "@/components/auth/Header.vue";
 
 const loading = ref(false);
-
-// auth.signUp({
-//   email,
-//   password,
-//   options: {
-//     emailRedirectTo: "/email-verified",
-//   },
-// });
-
 const email = ref("");
 const password = ref("");
 const error = ref("");
-const auth = useAuthStore();
 const router = useRouter();
+
 const onSignup = async () => {
   error.value = "";
   loading.value = true;
+
+  const redirectUrl = import.meta.env.VITE_SUPABASE_EMAIL_VERIF;
+
   try {
-    await auth.signup(email.value, password.value);
+    const { data, error: signupError } = await supabase.auth.signUp({
+      email: email.value,
+      password: password.value,
+      options: {
+        emailRedirectTo: redirectUrl,
+      },
+    });
+
+    if (signupError) throw signupError;
+
     router.push(`/email-verification?email=${encodeURIComponent(email.value)}`);
   } catch (err) {
-    error.value = err.message;
+    error.value = err.message || "Gagal mendaftar.";
   } finally {
     loading.value = false;
   }
