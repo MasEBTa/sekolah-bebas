@@ -64,33 +64,21 @@ onMounted(async () => {
     router.push("/login");
   }
 });
-
 const resendVerification = async () => {
-  error.value = "";
   success.value = false;
-
+  error.value = "";
+  startCountdown(); // Mulai countdown agar tombol disabled sementara
   try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    const user = sessionData.session?.user;
-
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-
     const { error: resendError } = await supabase.auth.resend({
       type: "signup",
-      email: user.email,
+      email: email.value,
     });
-
     if (resendError) {
       throw resendError;
     }
-
     success.value = true;
-    startCountdown(); // Mulai countdown agar tombol disabled sementara
   } catch (err) {
-    error.value = err.message || "Gagal mengirim ulang email verifikasi.";
+    error.value = err.message || "Gagal mengirim ulang email.";
   }
 };
 

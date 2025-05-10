@@ -65,6 +65,7 @@ const error = ref("");
 const router = useRouter();
 const auth = useAuthStore();
 const isLoading = ref(false);
+
 const onLogin = async () => {
   error.value = "";
   isLoading.value = true;

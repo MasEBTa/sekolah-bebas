@@ -54,8 +54,8 @@ const routes = [
     component: () => import("@/views/auth/VerificationSent.vue"),
   },
   {
-    path: "/email-verified",
-    name: "emailVerified",
+    path: "/:catchAll(.*)",
+    name: "catchAll",
     component: () => import("@/views/auth/VerifiedEmail.vue"),
   },
   {
