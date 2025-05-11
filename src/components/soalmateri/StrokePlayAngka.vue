@@ -9,15 +9,25 @@ const props = defineProps({
 
 const writer1 = ref(null);
 
+const emit = defineEmits(["answered"]); // Emit event for answered status
+const isAnswered = ref(false);
+
 function startAnimationHandler() {
   writer1.value?.restartAnimation();
+}
+function handleFinish(result) {
+  console.log("Latihan selesai:", result);
+  isAnswered.value = true; // Menandakan soal sudah dijawab
+  emit("answered", isAnswered.value); // Emit event ke parent
 }
 </script>
 
 <template>
+  <h2 class="text-xl font-bold text">{{ question.soal }}</h2>
+
   <div class="box">
     <div class="button-top-container">
-      <a class="ms-3" @click="startAnimationHandler" href="#">
+      <a class="ms-3" @click="startAnimationHandler">
         <i class="bi bi-repeat"></i>
       </a>
     </div>
@@ -29,12 +39,8 @@ function startAnimationHandler() {
       strokeColor="blue"
       :delayBetweenStrokes="1"
       :animationDuration="5"
+      @finished="handleFinish"
     />
-    <div class="button-bottom-container">
-      <router-link :to="'/math/show/3'"
-        ><div class="main-bg-col butt">Next</div></router-link
-      >
-    </div>
   </div>
 </template>
 
@@ -52,26 +58,8 @@ function startAnimationHandler() {
   height: 100%;
   width: 100%;
 }
-.button-bottom-container {
-  justify-content: center;
-  padding-bottom: 1rem;
-  padding-top: 1rem;
-}
-.button-top-container,
-.button-bottom-container {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  max-height: 5rem;
-}
-.butt {
-  min-width: 100px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  width: 35%;
-  border-radius: 3rem;
-  max-height: 5rem;
+.text {
+  font-size: 1rem;
+  margin-bottom: 3rem;
 }
 </style>

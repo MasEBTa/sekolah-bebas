@@ -1,7 +1,7 @@
 <template>
   <div class="cov">
     <div class="p-4">
-      <h2 class="text-xl font-bold mb-2">{{ question.soal }}</h2>
+      <h2 class="text-xl font-bold mb-2 text">{{ question.soal }}</h2>
 
       <div class="box">
         <StrokeSvg
@@ -87,5 +87,9 @@ button:focus {
 }
 .cov {
   justify-items: center;
+}
+.text {
+  font-size: 1rem;
+  margin-bottom: 3rem;
 }
 </style>

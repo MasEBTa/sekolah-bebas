@@ -9,7 +9,6 @@
       xmlns="http://www.w3.org/2000/svg"
     >
       <g :key="animationKey">
-        <!-- PERUBAHANNYA DI SINI -->
         <path
           v-for="(stroke, index) in strokesData"
           :key="index"
@@ -17,29 +16,24 @@
           class="stroke-path"
           :stroke="strokeColor"
           :stroke-width="strokeWidth"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          :stroke-linecap="lineCap"
+          :stroke-linejoin="safeLineJoin"
           fill="none"
-          :style="[
-            {
-              animationDelay: `${index * delayBetweenStrokes}s`,
-              animationDuration: `${animationDuration}s`,
-            },
-            'color: red',
-          ]"
+          :style="{
+            animationDelay: `${index * delayBetweenStrokes}s`,
+            animationDuration: `${animationDuration}s`,
+          }"
         />
       </g>
     </svg>
   </div>
-  <!-- 
-    stroke-linejoin="round/bevel/miter/miter-clip"
-    stroke-linecap="round/square/butt" 
-    -->
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from "vue";
+import { ref, computed, nextTick, onMounted, watch } from "vue";
+
 const svgRef = ref(null);
+const emit = defineEmits(["finished"]);
 
 const props = defineProps({
   strokesData: {
@@ -62,6 +56,10 @@ const props = defineProps({
     type: String,
     default: "round",
   },
+  lineCap: {
+    type: String,
+    default: "round",
+  },
   strokeColor: {
     type: String,
     default: "#000000",
@@ -80,35 +78,55 @@ const props = defineProps({
   },
 });
 
-// Validasi lineJoin
 const validLineJoins = ["round", "bevel", "miter", "miter-clip"];
-const safeLineJoin = computed(() => {
-  return validLineJoins.includes(props.lineJoin) ? props.lineJoin : "round";
-});
+const safeLineJoin = computed(() =>
+  validLineJoins.includes(props.lineJoin) ? props.lineJoin : "round"
+);
 
-function resetAllAnimations() {
-  if (!svgRef.value) return;
-  const paths = svgRef.value.querySelectorAll(".stroke-path");
-  paths.forEach((path) => {
-    path.style.animation = "none"; // Hapus animasinya
-    path.offsetHeight; // Force reflow browser (wajib ini)
-  });
-}
-
-// ini kunci untuk force reload animasi
 const animationKey = ref(0);
 
 function restartAnimation() {
-  animationKey.value++; // cukup increment ini
+  animationKey.value++;
 }
-if (!props.autoStart) {
-  // kalau autoStart true, langsung restart animasi setelah render
+
+function setupAnimationEndListener() {
   nextTick(() => {
-    resetAllAnimations();
+    if (!svgRef.value) return;
+
+    const paths = svgRef.value.querySelectorAll(".stroke-path");
+    let finishedCount = 0;
+
+    paths.forEach((path) => {
+      path.addEventListener(
+        "animationend",
+        () => {
+          finishedCount++;
+          if (finishedCount === paths.length) {
+            emit("finished", {
+              status: "success",
+              message: "Latihan selesai!",
+            });
+          }
+        },
+        { once: true } // pastikan listener hanya jalan sekali per stroke
+      );
+    });
   });
 }
+
+// Setup saat mount
+onMounted(() => {
+  if (props.autoStart) {
+    setupAnimationEndListener();
+  }
+});
+
+// Watch ketika animationKey berubah (karena restartAnimation)
+watch(animationKey, () => {
+  setupAnimationEndListener();
+});
+
 defineExpose({
-  resetAllAnimations,
   restartAnimation,
 });
 </script>
