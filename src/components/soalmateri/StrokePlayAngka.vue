@@ -61,5 +61,6 @@ function handleFinish(result) {
 .text {
   font-size: 1rem;
   margin-bottom: 3rem;
+  margin-top: 5rem;
 }
 </style>

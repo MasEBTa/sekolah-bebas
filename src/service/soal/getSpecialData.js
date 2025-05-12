@@ -7,8 +7,8 @@ import numberPath from "../../assets/path/numberPath";
 
 function specialData(name) {
   if (name === "mengenal-angka") {
-    const soal1 = generateAllMengenalAngka(5);
-    const soal2 = generateAllMenulisAngka(5);
+    const soal1 = generateAllMengenalAngka(1);
+    const soal2 = generateAllMenulisAngka(1);
     const soal3 = convertToPlayerSoalList(soal2);
 
     const hasil = shuffleArray([...soal1, ...soal2]);

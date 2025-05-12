@@ -96,10 +96,7 @@ function handleAnswered(status) {
   </div>
 
   <!-- Menampilkan soal aktif berdasarkan currentSoalIndex -->
-  <div
-    v-if="dataSoal.length > 0"
-    style="height: 85%; align-content: center; justify-items: center"
-  >
+  <div v-if="dataSoal.length > 0" style="height: 85%; justify-items: center">
     <div
       v-for="(soal, index) in dataSoal"
       :key="soal.nomor"

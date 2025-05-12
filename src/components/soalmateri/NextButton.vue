@@ -16,7 +16,7 @@ const props = defineProps({
 <style scoped>
 .bottom-nav {
   position: fixed;
-  bottom: 16px;
+  bottom: 2rem;
   left: 0;
   right: 0;
   z-index: 1000;

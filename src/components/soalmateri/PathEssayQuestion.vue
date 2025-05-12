@@ -1,6 +1,6 @@
 <template>
   <div class="cov">
-    <div class="p-4">
+    <div class="uncov">
       <h2 class="text-xl font-bold mb-2 text">{{ question.soal }}</h2>
 
       <div class="box">
@@ -87,6 +87,9 @@ button:focus {
 }
 .cov {
   justify-items: center;
+}
+.uncov {
+  padding-top: 4rem;
 }
 .text {
   font-size: 1rem;
