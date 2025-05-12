@@ -88,7 +88,7 @@ function handleAnswered(status) {
     <!-- Tombol Next untuk berpindah soal -->
     <NextButton
       text="Next"
-      v-if="isAnswered"
+      v-if="isAnswered && !(dataSoal.length - 1 == currentSoalIndex)"
       @click="nextSoal"
       :disabled="currentSoalIndex === dataSoal.length - 1"
     />
