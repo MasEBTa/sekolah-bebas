@@ -23,28 +23,33 @@ function handleFinish(result) {
 </script>
 
 <template>
-  <h2 class="text-xl font-bold text">{{ question.soal }}</h2>
+  <div class="cov">
+    <h2 class="text-xl font-bold text">{{ question.soal }}</h2>
 
-  <div class="box">
-    <div class="button-top-container">
-      <a class="ms-3" @click="startAnimationHandler">
-        <i class="bi bi-repeat"></i>
-      </a>
+    <div class="box">
+      <div class="button-top-container">
+        <a class="ms-3" @click="startAnimationHandler">
+          <i class="bi bi-repeat"></i>
+        </a>
+      </div>
+      <StrokeAnimation
+        class="stroke"
+        ref="writer1"
+        :strokesData="question.path.strokes"
+        :size="'10rem'"
+        strokeColor="blue"
+        :delayBetweenStrokes="1"
+        :animationDuration="5"
+        @finished="handleFinish"
+      />
     </div>
-    <StrokeAnimation
-      class="stroke"
-      ref="writer1"
-      :strokesData="question.path.strokes"
-      :size="'10rem'"
-      strokeColor="blue"
-      :delayBetweenStrokes="1"
-      :animationDuration="5"
-      @finished="handleFinish"
-    />
   </div>
 </template>
 
 <style scoped>
+.cov {
+  padding-top: 5rem;
+}
 .stroke {
   flex: 3;
   display: flex;
@@ -61,6 +66,5 @@ function handleFinish(result) {
 .text {
   font-size: 1rem;
   margin-bottom: 3rem;
-  margin-top: 5rem;
 }
 </style>

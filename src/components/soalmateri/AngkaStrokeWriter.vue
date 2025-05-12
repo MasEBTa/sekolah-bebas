@@ -43,32 +43,37 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <h2 class="text-xl font-bold text">{{ question.soal }}</h2>
+  <div class="cov">
+    <h2 class="text-xl font-bold text">{{ question.soal }}</h2>
 
-  <div class="box">
-    <StrokeWritter
-      class="stroke"
-      :avgsdH="question.path.avgsdH"
-      :avgsdL="question.path.avgsdL"
-      :size="size"
-      :strokesData="question.path.strokes"
-      :defaultColor="'#ccc'"
-      :successColor="'#000'"
-      :funishColor="'green'"
-      :canvasColor="'blue'"
-      :strokeWidth="1"
-      :lineJoin="'round'"
-      :lineCap="'round'"
-      :canvasStrokeWidth="5"
-      :canvasLineCap="'round'"
-      :canvasLineJoin="'round'"
-      :trial="5"
-      @finished="handleLatihanSelesai"
-    />
+    <div class="box">
+      <StrokeWritter
+        class="stroke"
+        :avgsdH="question.path.avgsdH"
+        :avgsdL="question.path.avgsdL"
+        :size="size"
+        :strokesData="question.path.strokes"
+        :defaultColor="'#ccc'"
+        :successColor="'#000'"
+        :funishColor="'green'"
+        :canvasColor="'blue'"
+        :strokeWidth="1"
+        :lineJoin="'round'"
+        :lineCap="'round'"
+        :canvasStrokeWidth="5"
+        :canvasLineCap="'round'"
+        :canvasLineJoin="'round'"
+        :trial="5"
+        @finished="handleLatihanSelesai"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.cov {
+  padding-top: 3rem;
+}
 .stroke {
   flex: 3;
   display: flex;
@@ -87,6 +92,5 @@ onUnmounted(() => {
 .text {
   font-size: 1rem;
   margin-bottom: 3rem;
-  margin-top: 5rem;
 }
 </style>
