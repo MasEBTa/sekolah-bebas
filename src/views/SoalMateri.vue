@@ -2,35 +2,65 @@
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted } from "vue";
 
+// components
 import Header from "../components/soalmateri/header/Header.vue";
 import PathEssayQuestion from "../components/soalmateri/PathEssayQuestion.vue";
 import AngkaStrokeWriter from "../components/soalmateri/AngkaStrokeWriter.vue";
-import getSpecialData from "../service/soal/getSpecialData";
 import NextButton from "../components/soalmateri/NextButton.vue"; // Tombol Next
 import StrokePlayAngka from "@/components/soalmateri/StrokePlayAngka.vue";
 
+// service
+import getSpecialData from "../service/soal/getSpecialData";
+
+// store
+import { useSoalStore } from "@/stores/soalStore";
+const soalStore = useSoalStore();
+
+// pengaturan route
 const route = useRoute();
 const router = useRouter();
+
+// data data dari route
+const path = computed(() => route.path.split("/").pop() || "");
+console.log("📍 Path dari URL:", path.value);
 
 function goBack() {
   router.go(-1);
 }
-const path = computed(() => route.path.split("/").pop() || "");
-console.log("📍 Path dari URL:", path.value);
 
 const dataquery = JSON.parse(route.query.needData || "null");
 
-const dataSoal = ref([]);
-// console.log("data semua soal :", dataSoal.value);
-
+// data-data mengenai soal
+const idSoal = route.params.id;
+const jumlahSoal = ref(0);
+const dataSoal = ref([]); // data semua soalnya (jika di generate)
+const currentSoal = ref({}); // data semua soalnya (jika di generate)
 const currentSoalIndex = ref(0); // Menyimpan nomor soal aktif
 const isAnswered = ref(false); // Menyimpan status apakah soal sudah dijawab
 
 onMounted(() => {
   // cek dulu apakah ada soal di store
-  if (!soalStore.adaSoal()) {
-    console.warn("Belum ada soal, mungkin perlu ambil dari API.");
+  if (!soalStore.IsAdaSoal()) {
+    // jika masuk sini berati tidak ada
+    // cek apakah ini ada nilai data query khusus
+    if (dataquery != null) {
+      // jika masuk sini berarti ada
+      soalStore.setId(idSoal); // tambahkan id soal ke store
+      dataSoal.value = getSpecialData(dataquery); // Generate soalnya, menghasilkan soal sesuai tipenya
+      soalStore.tambahBanyakSoal(dataSoal.value); // setelah dapat dataSoal simpan ke store
+      // cek apakah benar benar sudah masuk
+      if (soalStore.getSemuaSoal.length > 1) {
+        // jika masuk sini berarti soal sudah kesimpan
+        dataSoal.value = soalStore.getSemuaSoal; // ambil data soalnya
+        jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
+        currentSoal.value = soalStore.getSoalByNomor(
+          currentSoalIndex.value + 1
+        )[0]; // simpan soal pertama untuk ditampilkan
+        console.log("currentSoal", currentSoal);
+      }
+    }
   } else {
+    // jika masuk sini berarti tidak ada soal di store
     console.log("Soal tersedia:", soalStore.soal.length);
   }
 });
@@ -43,13 +73,13 @@ onMounted(() => {
  *---------------------------------------------------------------
  *
  * tiap kali user masuk ke halaman ini
- * cek dulu apakah ada soal di store
+ * [x] cek dulu apakah ada soal di store
  * kalau ada cek apakah soalnya seperti yang dimaksud user (by id bundle soal)
  * jikas iya tampilkan. jika tidak cari soalnya dan ganti (ikuti logika berikutnya)
  *
  * Jika user belum mengerjakan soal
  * [x] cek apakah ini ada nilai data query khusus (berarti soal generate bukan soal yang disimpan di database)
- * Generate soalnya
+ * [x] Generate soalnya
  * setelah dapat dataSoal simpan ke store
  * ambil lagi, lalu tampilkan ke user (untuk tampilan ke user sudah lancar)(bisa dibuat satu persatu pengambilan soalnyaby number yg dikerjakan, sekarang tidak satu persatu tapi bisa ditampilkan)
  * Tiap kali user mengerjakan satu nomor soal perbarui Jawaban satu-persatu di store
@@ -79,16 +109,12 @@ onMounted(() => {
  * ketika disimpan ke database tandai jadi true dipenanda storenya (otomatis buat juga di database)
  */
 
-// Mendapatkan data soal jika dataquery tersedia (jika user emang belum mengerjakan soal)
-if (dataquery != null) {
-  dataSoal.value = getSpecialData(dataquery);
-  // console.log("data soal", dataSoal.value);
-}
-
 // Fungsi untuk berpindah ke soal berikutnya
 function nextSoal() {
-  if (currentSoalIndex.value < dataSoal.value.length - 1) {
-    currentSoalIndex.value++;
+  if (currentSoalIndex.value < jumlahSoal.value - 1) {
+    currentSoalIndex.value++; // index soalnya di gasnti ke soal berikutnya
+    currentSoal.value = soalStore.getSoalByNomor(currentSoalIndex.value + 1)[0]; // soal saat ini diganti soal berikutnya
+    // simpan jawaban user
     isAnswered.value = false; // Reset status jawaban pada soal berikutnya
   }
 }
@@ -105,50 +131,50 @@ function handleAnswered(status) {
   </div>
 
   <!-- Menampilkan soal aktif berdasarkan currentSoalIndex -->
-  <div v-if="dataSoal.length > 0" style="height: 85%; justify-items: center">
-    <div
+  <div v-if="jumlahSoal > 0" style="height: 85%; justify-items: center">
+    <!-- <div
       v-for="(soal, index) in dataSoal"
       :key="soal.nomor"
       v-show="index === currentSoalIndex"
-    >
-      <!-- Komponen berdasarkan tipe -->
-      <PathEssayQuestion
-        v-if="soal.tipe === 'esay-singkat-stroke'"
-        :question="soal"
-        @answered="handleAnswered"
-      />
+    > -->
+    <!-- Komponen berdasarkan tipe -->
+    <PathEssayQuestion
+      v-if="currentSoal.tipe === 'esay-singkat-stroke'"
+      :question="currentSoal"
+      @answered="handleAnswered"
+    />
 
-      <AngkaStrokeWriter
-        v-if="soal.tipe === 'menulis-stroke-angka'"
-        :question="soal"
-        @answered="handleAnswered"
-      />
+    <AngkaStrokeWriter
+      v-if="currentSoal.tipe === 'menulis-stroke-angka'"
+      :question="currentSoal"
+      @answered="handleAnswered"
+    />
 
-      <StrokePlayAngka
-        v-if="soal.tipe === 'play-stroke-angka'"
-        :question="soal"
-        @answered="handleAnswered"
-      />
-      <!-- Tambah tipe lain jika ada -->
-      <!-- <div v-else>
-        <p class="text-red-500">Tipe soal belum didukung: {{ soal.tipe }}</p>
+    <StrokePlayAngka
+      v-if="currentSoal.tipe === 'play-stroke-angka'"
+      :question="currentSoal"
+      @answered="handleAnswered"
+    />
+    <!-- Tambah tipe lain jika ada -->
+    <!-- <div v-else>
+        <p class="text-red-500">Tipe soal belum didukung: {{ currentSoal.tipe }}</p>
       </div> -->
-    </div>
-
-    <!-- Tombol Next untuk berpindah soal -->
-    <NextButton
-      text="Next"
-      v-if="isAnswered && !(dataSoal.length - 1 == currentSoalIndex)"
-      @click="nextSoal"
-      :disabled="currentSoalIndex === dataSoal.length - 1"
-    />
-    <NextButton
-      text="Finish"
-      @click="goBack"
-      v-else-if="isAnswered && dataSoal.length - 1 == currentSoalIndex"
-      :disabled="currentSoalIndex === dataSoal.length - 1"
-    />
   </div>
+
+  <!-- Tombol Next untuk berpindah soal -->
+  <NextButton
+    text="Next"
+    v-if="isAnswered && !(jumlahSoal - 1 == currentSoalIndex)"
+    @click="nextSoal"
+    :disabled="currentSoalIndex === jumlahSoal - 1"
+  />
+  <NextButton
+    text="Finish"
+    @click="goBack"
+    v-else-if="isAnswered && jumlahSoal - 1 == currentSoalIndex"
+    :disabled="currentSoalIndex === jumlahSoal - 1"
+  />
+  <!-- </div> -->
 </template>
 
 <style scoped>

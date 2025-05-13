@@ -27,9 +27,9 @@ const allMapelNames = computed(() => store.allMapelNames);
 console.log("mapelname:", allMapelNames);
 
 onMounted(() => {
-  console.log("✅ Data lesson di komponen:", store.lessons);
-  console.log("🎯 Data berdasarkan path:", dataMapel.value);
-  console.log("📚 Daftar semua mapel:", allMapelNames.value);
+  // console.log("✅ Data lesson di komponen:", store.lessons);
+  // console.log("🎯 Data berdasarkan path:", dataMapel.value);
+  // console.log("📚 Daftar semua mapel:", allMapelNames.value);
 });
 </script>
 

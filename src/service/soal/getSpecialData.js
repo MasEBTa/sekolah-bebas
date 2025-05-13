@@ -11,10 +11,17 @@ function specialData(name) {
     const soal2 = generateAllMenulisAngka(5);
     const soal3 = convertToPlayerSoalList(soal2);
 
-    const hasil = shuffleArray([...soal1, ...soal2]);
-    // console.log("soal:", hasil);
+    const hasilShuffle = shuffleArray([...soal1, ...soal2]);
 
-    return [...soal3, ...hasil];
+    const hasilGabung = [...soal3, ...hasilShuffle];
+
+    // Reset nomor sesuai urutan gabungan
+    const finalSoal = hasilGabung.map((soal, index) => ({
+      ...soal,
+      nomor: index + 1,
+    }));
+
+    return finalSoal;
   } else {
     return null;
   }

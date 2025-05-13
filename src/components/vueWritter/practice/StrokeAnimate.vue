@@ -108,23 +108,33 @@ function setupAnimationEndListener() {
             });
           }
         },
-        { once: true } // pastikan listener hanya jalan sekali per stroke
+        { once: true }
       );
     });
   });
 }
 
-// Setup saat mount
+// Saat pertama dimount
 onMounted(() => {
   if (props.autoStart) {
     setupAnimationEndListener();
   }
 });
 
-// Watch ketika animationKey berubah (karena restartAnimation)
+// Jika animationKey berubah (karena restartAnimation), pasang ulang listener
 watch(animationKey, () => {
   setupAnimationEndListener();
 });
+
+// ✅ Jika strokesData berubah, restart animasi dan pasang listener baru
+watch(
+  () => props.strokesData,
+  () => {
+    restartAnimation();
+    setupAnimationEndListener();
+  },
+  { deep: true }
+);
 
 defineExpose({
   restartAnimation,

@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import HiraganaStrokeViewer from "./HiraganaStrokeViewer.vue";
 import StrokeCanvas from "./StrokeCanvas.vue";
 
@@ -61,7 +61,6 @@ const canvas = ref(null);
 const attempts = ref(0); // Menyimpan jumlah percobaan untuk stroke saat ini
 const wrongStrokes = ref([]); // Menyimpan indeks stroke yang salah
 
-// Inisialisasi stroke awal
 const strokes = ref(
   props.strokesData.map((path) => ({
     path,
@@ -131,13 +130,13 @@ function handleFinish(userPath) {
 
 function nextStroke() {
   currentIndex.value++;
-  attempts.value = 0; // Reset percobaan
+  attempts.value = 0;
   canvas.value.clearCanvas();
 
   if (currentIndex.value >= strokes.value.length) {
     setTimeout(() => {
       isFinished.value = true;
-      // Pastikan hanya stroke yang benar yang mendapatkan finishColor
+      // Tandai semua stroke yang benar dengan warna selesai
       strokes.value = strokes.value.map((s, index) => ({
         ...s,
         color: wrongStrokes.value.includes(index) ? s.color : props.finishColor,
@@ -146,10 +145,31 @@ function nextStroke() {
         status: "success",
         message: `Latihan selesai! ${wrongStrokes.value.length} stroke(s) salah`,
       });
-    }, 600); // beri waktu 600ms agar warna terlihat dulu
-    return;
+    }, 600);
   } else {
     strokes.value[currentIndex.value].color = props.defaultColor;
   }
 }
+
+// ✅ Tambahan: Reset ulang jika props.strokesData berubah
+watch(
+  () => props.strokesData,
+  (newStrokes) => {
+    strokes.value = newStrokes.map((path) => ({
+      path,
+      color: props.defaultColor,
+    }));
+    isFinished.value = false;
+    currentIndex.value = 0;
+    attempts.value = 0;
+    wrongStrokes.value = [];
+
+    if (strokes.value.length > 0) {
+      strokes.value[0].color = props.defaultColor;
+    }
+
+    canvas.value?.clearCanvas();
+  },
+  { deep: true }
+);
 </script>
