@@ -50,18 +50,25 @@ onMounted(() => {
       soalStore.tambahBanyakSoal(dataSoal.value); // setelah dapat dataSoal simpan ke store
       // cek apakah benar benar sudah masuk
       if (soalStore.getSemuaSoal.length > 1) {
+        console.log(soalStore.getSemuaSoal); // ambil data soalnya
         // jika masuk sini berarti soal sudah kesimpan
-        dataSoal.value = soalStore.getSemuaSoal; // ambil data soalnya
+        // dataSoal.value = soalStore.getSemuaSoal; // ambil data soalnya
         jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
         currentSoal.value = soalStore.getSoalByNomor(
           currentSoalIndex.value + 1
         )[0]; // simpan soal pertama untuk ditampilkan
-        console.log("currentSoal", currentSoal);
       }
     }
   } else {
-    // jika masuk sini berarti tidak ada soal di store
-    console.log("Soal tersedia:", soalStore.soal.length);
+    // samakan apakah id soal di route sama dengan yang di store
+    if (idSoal == soalStore.getId) {
+      console.log(soalStore.getSemuaSoal); // ambil data soalnya
+      currentSoalIndex.value = soalStore.getIndex; // index soalnya di gasnti ke soal berikutnya
+      // kalau idnya sama tinggal tampilkan soalnya berdasarkan currentIndex yang dikerjakan
+      jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
+      currentSoal.value = soalStore.getSoalByNomor(soalStore.getIndex + 1)[0];
+      console.log(currentSoal.value);
+    }
   }
 });
 
@@ -80,8 +87,8 @@ onMounted(() => {
  * Jika user belum mengerjakan soal
  * [x] cek apakah ini ada nilai data query khusus (berarti soal generate bukan soal yang disimpan di database)
  * [x] Generate soalnya
- * setelah dapat dataSoal simpan ke store
- * ambil lagi, lalu tampilkan ke user (untuk tampilan ke user sudah lancar)(bisa dibuat satu persatu pengambilan soalnyaby number yg dikerjakan, sekarang tidak satu persatu tapi bisa ditampilkan)
+ * [x] setelah dapat dataSoal simpan ke store
+ * [x] ambil lagi, lalu tampilkan ke user (untuk tampilan ke user sudah lancar)(bisa dibuat satu persatu pengambilan soalnyaby number yg dikerjakan, sekarang tidak satu persatu tapi bisa ditampilkan)
  * Tiap kali user mengerjakan satu nomor soal perbarui Jawaban satu-persatu di store
  * Ketika jawaban terakhir sudah selesai user dan jawaban terakhir sudah disimpan maka baru tampilkan Tombol finish
  * Ketika tombol finish ditekan, maka simpan data soal dan jawaban yang ada to store ke database dan catata berdasar id user. (databasenya belum dibuat untuk ini)
@@ -91,7 +98,7 @@ onMounted(() => {
  * [x] cek apakah ini ada nilai data query khusus, jika tidak ada
  * ambil datanya dari database berdasarkan id bundel soalnya (databasenya belum dibuat untuk ini)
  * setelah dapat data soalnya masukkan ke store
- * panggil lagi dari store untuk ditampilkan ke user (bisa satu persatu, sekarang tidak satu persatu tapi bisa ditampilkan)
+ * [x] panggil lagi dari store untuk ditampilkan ke user (bisa satu persatu, sekarang tidak satu persatu tapi bisa ditampilkan)
  * simpan jawaban user ke store, jika sudah semuanya maka tampilkan tombol finish
  * ketika user menekan tombol finish simpan soal ke database sambil redirect.
  * Jika soal sudah disimpan ke database maka user dianggap sudah mengerjakan soal.
@@ -112,8 +119,13 @@ onMounted(() => {
 // Fungsi untuk berpindah ke soal berikutnya
 function nextSoal() {
   if (currentSoalIndex.value < jumlahSoal.value - 1) {
+    console.log("masuk");
+
+    console.log(currentSoalIndex.value); // index soalnya di gasnti ke soal berikutnya
     currentSoalIndex.value++; // index soalnya di gasnti ke soal berikutnya
+    console.log(currentSoalIndex.value); // index soalnya di gasnti ke soal berikutnya
     currentSoal.value = soalStore.getSoalByNomor(currentSoalIndex.value + 1)[0]; // soal saat ini diganti soal berikutnya
+    soalStore.setIndex(currentSoalIndex.value); // ganti index terakhir di storenya
     // simpan jawaban user
     isAnswered.value = false; // Reset status jawaban pada soal berikutnya
   }

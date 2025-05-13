@@ -4,6 +4,7 @@ export const useSoalStore = defineStore("soal", {
   state: () => ({
     id: "",
     soal: [],
+    lastIndex: 0,
     jawabanUser: {},
   }),
 
@@ -23,6 +24,9 @@ export const useSoalStore = defineStore("soal", {
     },
     getId: (state) => {
       return state.id;
+    },
+    getIndex: (state) => {
+      return state.lastIndex;
     },
   },
 
@@ -112,6 +116,9 @@ export const useSoalStore = defineStore("soal", {
     // ✅ Ambil ID (alternatif ke getter getId)
     ambilId() {
       return this.id;
+    },
+    setIndex(indexnya) {
+      this.lastIndex = indexnya;
     },
   },
 });
