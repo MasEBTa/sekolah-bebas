@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useSoalStore = defineStore("soal", {
   state: () => ({
-    id: "20afdaf8-f8ec-4e86-a929-3ef99fd1988f",
+    id: "",
     soal: [],
     jawabanUser: {},
   }),
@@ -40,6 +40,10 @@ export const useSoalStore = defineStore("soal", {
 
     resetJawabanUser() {
       this.jawabanUser = {};
+    },
+
+    IsAdaSoal() {
+      return this.soal.length > 0;
     },
   },
 });

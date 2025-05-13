@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 
 import Header from "../components/soalmateri/header/Header.vue";
 import PathEssayQuestion from "../components/soalmateri/PathEssayQuestion.vue";
@@ -25,6 +25,15 @@ const dataSoal = ref([]);
 
 const currentSoalIndex = ref(0); // Menyimpan nomor soal aktif
 const isAnswered = ref(false); // Menyimpan status apakah soal sudah dijawab
+
+onMounted(() => {
+  // cek dulu apakah ada soal di store
+  if (!soalStore.adaSoal()) {
+    console.warn("Belum ada soal, mungkin perlu ambil dari API.");
+  } else {
+    console.log("Soal tersedia:", soalStore.soal.length);
+  }
+});
 
 /** Logic soal
  * --------------------------------------------------------------
