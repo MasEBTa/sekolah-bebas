@@ -25,6 +25,7 @@ const path = computed(() => route.path.split("/").pop() || "");
 console.log("📍 Path dari URL:", path.value);
 
 function goBack() {
+  soalStore.setIndex(0); // ganti index terakhir di storenya jadi 0
   router.go(-1);
 }
 
@@ -37,6 +38,9 @@ const dataSoal = ref([]); // data semua soalnya (jika di generate)
 const currentSoal = ref({}); // data semua soalnya (jika di generate)
 const currentSoalIndex = ref(0); // Menyimpan nomor soal aktif
 const isAnswered = ref(false); // Menyimpan status apakah soal sudah dijawab
+const currenAnswer = ref(null);
+
+console.log("jawaban nul enggak", currenAnswer == null);
 
 onMounted(() => {
   // cek dulu apakah ada soal di store
@@ -69,6 +73,16 @@ onMounted(() => {
       currentSoal.value = soalStore.getSoalByNomor(soalStore.getIndex + 1)[0];
       console.log(currentSoal.value);
     }
+    // isi jawabannya
+    currenAnswer.value = soalStore.getJawabanUser(currentSoalIndex.value + 1);
+
+    // cek apakah soal sudah selesai dikerjakan
+    if (soalStore.isSemuaJawabanLengkap) {
+      isAnswered.value = true; // numculkan tombol lanjut/finish
+    }
+    console.log("jawavan lengkap", soalStore.isSemuaJawabanLengkap);
+    console.log("semua soal", soalStore.getSemuaSoal);
+    console.log("semua jawaban", soalStore.getSemuaJawabanUser);
   }
 });
 
@@ -119,15 +133,18 @@ onMounted(() => {
 // Fungsi untuk berpindah ke soal berikutnya
 function nextSoal() {
   if (currentSoalIndex.value < jumlahSoal.value - 1) {
-    console.log("masuk");
-
-    console.log(currentSoalIndex.value); // index soalnya di gasnti ke soal berikutnya
     currentSoalIndex.value++; // index soalnya di gasnti ke soal berikutnya
-    console.log(currentSoalIndex.value); // index soalnya di gasnti ke soal berikutnya
+    currenAnswer.value = soalStore.getJawabanUser(currentSoalIndex.value + 1);
     currentSoal.value = soalStore.getSoalByNomor(currentSoalIndex.value + 1)[0]; // soal saat ini diganti soal berikutnya
     soalStore.setIndex(currentSoalIndex.value); // ganti index terakhir di storenya
-    // simpan jawaban user
-    isAnswered.value = false; // Reset status jawaban pada soal berikutnya
+    console.log("jawabannya nih bos senggol dong", currenAnswer.value);
+
+    // cek apakah soal sudah selesai dikerjakan
+    if (soalStore.isSemuaJawabanLengkap) {
+      isAnswered.value = true; // numculkan tombol lanjut/finish
+    } else {
+      isAnswered.value = false; // Reset status jawaban pada soal berikutnya
+    }
   }
 }
 
@@ -144,27 +161,28 @@ function handleAnswered(status) {
 
   <!-- Menampilkan soal aktif berdasarkan currentSoalIndex -->
   <div v-if="jumlahSoal > 0" style="height: 85%; justify-items: center">
-    <!-- <div
-      v-for="(soal, index) in dataSoal"
-      :key="soal.nomor"
-      v-show="index === currentSoalIndex"
-    > -->
     <!-- Komponen berdasarkan tipe -->
     <PathEssayQuestion
       v-if="currentSoal.tipe === 'esay-singkat-stroke'"
       :question="currentSoal"
+      :-nomor-soal="currentSoalIndex + 1"
+      :jawaban="currenAnswer"
       @answered="handleAnswered"
     />
 
     <AngkaStrokeWriter
       v-if="currentSoal.tipe === 'menulis-stroke-angka'"
       :question="currentSoal"
+      :-nomor-soal="currentSoalIndex + 1"
+      :jawaban="currenAnswer"
       @answered="handleAnswered"
     />
 
     <StrokePlayAngka
       v-if="currentSoal.tipe === 'play-stroke-angka'"
       :question="currentSoal"
+      :-nomor-soal="currentSoalIndex + 1"
+      :jawaban="currenAnswer"
       @answered="handleAnswered"
     />
     <!-- Tambah tipe lain jika ada -->

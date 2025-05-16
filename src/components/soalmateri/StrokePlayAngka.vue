@@ -3,8 +3,13 @@
 import { ref } from "vue";
 import StrokeAnimation from "../vueWritter/practice/StrokeAnimate.vue";
 
+import { useSoalStore } from "@/stores/soalStore"; // atau sesuaikan path-nya
+const soalStore = useSoalStore();
+
 const props = defineProps({
   question: Object,
+  jawaban: Object,
+  NomorSoal: Number,
 });
 
 const writer1 = ref(null);
@@ -17,6 +22,7 @@ function startAnimationHandler() {
 }
 function handleFinish(result) {
   console.log("Latihan selesai:", result);
+  soalStore.setJawabanUser(props.NomorSoal, result);
   isAnswered.value = true; // Menandakan soal sudah dijawab
   emit("answered", isAnswered.value); // Emit event ke parent
 }

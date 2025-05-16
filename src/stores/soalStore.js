@@ -22,18 +22,31 @@ export const useSoalStore = defineStore("soal", {
     getSemuaSoal: (state) => {
       return state.soal;
     },
+    getSemuaJawabanUser: (state) => {
+      return state.jawabanUser;
+    },
     getId: (state) => {
       return state.id;
     },
     getIndex: (state) => {
       return state.lastIndex;
     },
+    isSemuaJawabanLengkap() {
+      const semuaNomorSoal = this.soal.map((item) => item.nomor);
+      const semuaSudahDijawab = semuaNomorSoal.every(
+        (nomor) => nomor in this.jawabanUser
+      );
+
+      return semuaSudahDijawab;
+    },
   },
 
   actions: {
     setJawabanUser(nomor, jawaban) {
       const soalExist = this.soal.some((item) => item.nomor === nomor);
-      const isValid = typeof jawaban === "string" && jawaban.trim().length > 0;
+      const isValid =
+        typeof jawaban === "string" ||
+        (typeof jawaban === "object" && jawaban !== null);
 
       if (!soalExist) {
         console.error(`Nomor soal ${nomor} tidak ditemukan.`);
@@ -47,7 +60,6 @@ export const useSoalStore = defineStore("soal", {
 
       this.jawabanUser[nomor] = jawaban;
     },
-
     resetJawabanUser() {
       this.jawabanUser = {};
     },

@@ -1,5 +1,6 @@
 <template>
   <div :style="`position: relative; width: ${size}px; height: ${size}px`">
+    <!-- Viewer tetap selalu tampil -->
     <HiraganaStrokeViewer
       :strokes="strokes"
       :size="size"
@@ -8,9 +9,9 @@
       :lineCap="lineCap"
       :lineJoin="lineJoin"
     />
-    <!-- Hanya tampilkan StrokeCanvas jika belum selesai -->
+    <!-- Jika belum selesai dan bukan review mode -->
     <StrokeCanvas
-      v-if="!isFinished"
+      v-if="!isFinished && !isReview"
       ref="canvas"
       :size="size"
       :onFinish="handleFinish"
@@ -23,32 +24,27 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import HiraganaStrokeViewer from "./HiraganaStrokeViewer.vue";
 import StrokeCanvas from "./StrokeCanvas.vue";
 
 const emit = defineEmits(["finished"]);
 
 const props = defineProps({
-  strokesData: Array,
+  strokesData: Array, // ← array path SVG
+  reviewData: Object, // ← jika ada, tampilkan hasil review
   size: { type: Number, default: 256 },
   viewBox: { type: Number, default: 24 },
   trial: { type: Number, default: 3 },
   avgsdL: { type: Number, default: 20 },
   avgsdH: { type: Number, default: 50 },
-
-  // Warna referensi
   defaultColor: { type: String, default: "#ccc" },
   successColor: { type: String, default: "#000" },
   finishColor: { type: String, default: "green" },
   wrongColor: { type: String, default: "red" },
-
-  // Gaya referensi SVG
   strokeWidth: { type: [Number, String], default: 2 },
   lineCap: { type: String, default: "round" },
   lineJoin: { type: String, default: "round" },
-
-  // Gaya kanvas user
   canvasStrokeWidth: { type: Number, default: 6 },
   canvasLineCap: { type: String, default: "round" },
   canvasLineJoin: { type: String, default: "round" },
@@ -58,15 +54,38 @@ const props = defineProps({
 const isFinished = ref(false);
 const currentIndex = ref(0);
 const canvas = ref(null);
-const attempts = ref(0); // Menyimpan jumlah percobaan untuk stroke saat ini
-const wrongStrokes = ref([]); // Menyimpan indeks stroke yang salah
+const attempts = ref(0);
+const wrongStrokes = ref([]);
 
-const strokes = ref(
-  props.strokesData.map((path) => ({
+// Cek apakah mode review
+// const isReview = computed(() => props.reviewData != null);
+const isReview = props.reviewData != null;
+console.log("isi isReview nih", isReview);
+
+const strokes = ref([]);
+
+/**
+ * Fungsi untuk menghasilkan array stroke dengan warna (baik normal, review, atau latihan)
+ */
+function initStrokes(review = null) {
+  if (isReview) {
+    if (props.reviewData) {
+      return props.strokesData.map((path, i) => ({
+        path,
+        color: props.reviewData.wrongStrokes.includes(i)
+          ? props.wrongColor
+          : props.finishColor,
+      }));
+    }
+  }
+
+  return props.strokesData.map((path, i) => ({
     path,
-    color: props.defaultColor,
-  }))
-);
+    color: i === 0 ? props.defaultColor : props.defaultColor,
+  }));
+}
+
+strokes.value = initStrokes();
 
 function distance(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
@@ -100,9 +119,7 @@ function isSimilarPath(userPath, refPath) {
   }
 
   const avgDist = totalDist / minLen;
-
   console.log(avgDist);
-
   return !(avgDist > props.avgsdH || avgDist < props.avgsdL);
 }
 
@@ -110,19 +127,16 @@ function handleFinish(userPath) {
   const refPath = strokes.value[currentIndex.value].path;
 
   if (isSimilarPath(userPath, refPath)) {
-    // Jika benar
     strokes.value[currentIndex.value].color = props.successColor;
     nextStroke();
   } else {
     attempts.value++;
 
     if (attempts.value >= props.trial) {
-      // Jika salah lebih dari x kali, anggap benar tapi simpan sebagai salah
       strokes.value[currentIndex.value].color = props.wrongColor;
-      wrongStrokes.value.push(currentIndex.value); // Simpan indeks stroke yang salah
+      wrongStrokes.value.push(currentIndex.value);
       nextStroke();
     } else {
-      // Jika belum x kali, ulangi stroke ini
       canvas.value.clearCanvas();
     }
   }
@@ -136,14 +150,17 @@ function nextStroke() {
   if (currentIndex.value >= strokes.value.length) {
     setTimeout(() => {
       isFinished.value = true;
-      // Tandai semua stroke yang benar dengan warna selesai
       strokes.value = strokes.value.map((s, index) => ({
         ...s,
-        color: wrongStrokes.value.includes(index) ? s.color : props.finishColor,
+        color: wrongStrokes.value.includes(index)
+          ? props.wrongColor
+          : props.finishColor,
       }));
+
       emit("finished", {
-        status: "success",
-        message: `Latihan selesai! ${wrongStrokes.value.length} stroke(s) salah`,
+        finished: true,
+        strokes: props.strokesData,
+        wrongStrokes: wrongStrokes.value,
       });
     }, 600);
   } else {
@@ -151,24 +168,18 @@ function nextStroke() {
   }
 }
 
-// ✅ Tambahan: Reset ulang jika props.strokesData berubah
 watch(
   () => props.strokesData,
-  (newStrokes) => {
-    strokes.value = newStrokes.map((path) => ({
-      path,
-      color: props.defaultColor,
-    }));
+  () => {
+    strokes.value = initStrokes();
     isFinished.value = false;
     currentIndex.value = 0;
     attempts.value = 0;
     wrongStrokes.value = [];
 
-    if (strokes.value.length > 0) {
-      strokes.value[0].color = props.defaultColor;
+    if (!isReview.value) {
+      canvas.value?.clearCanvas();
     }
-
-    canvas.value?.clearCanvas();
   },
   { deep: true }
 );

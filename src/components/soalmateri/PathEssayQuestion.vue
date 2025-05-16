@@ -30,7 +30,7 @@
       </div>
 
       <div v-if="showResult" class="mt-4">
-        <p :class="isCorrect ? 'text-green-600' : 'text-red-600'">
+        <p :class="isCorrect ? 'text-success' : 'text-danger'">
           {{
             "Jawaban " +
             (isCorrect
@@ -44,11 +44,48 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch, onMounted } from "vue";
 import StrokeSvg from "../vueWritter/StrokeSvg.vue";
+
+import { useSoalStore } from "@/stores/soalStore"; // atau sesuaikan path-nya
+const soalStore = useSoalStore();
 
 const props = defineProps({
   question: Object,
+  jawaban: Object,
+  NomorSoal: Number,
+});
+
+// **Reset local state tiap kali soal atau jawaban awal berubah**
+watch(
+  () => props.NomorSoal,
+  () => {
+    if (props.jawaban != null) {
+      isAnswered.value = true;
+      showResult.value = true;
+      isCorrect.value = props.jawaban.hasil;
+      userAnswer.value = props.jawaban.answer;
+    } else {
+      userAnswer.value = "";
+      showResult.value = false;
+      isAnswered.value = false;
+    }
+  }
+);
+
+// Saat mount
+onMounted(() => {
+  if (props.jawaban != null) {
+    isAnswered.value = true;
+    showResult.value = true;
+    isCorrect.value = props.jawaban.hasil;
+    userAnswer.value = props.jawaban.answer;
+    emit("answered", isAnswered.value); // Emit event ke parent
+  } else {
+    userAnswer.value = "";
+    showResult.value = false;
+    isAnswered.value = false;
+  }
 });
 
 const emit = defineEmits(["answered"]); // Emit event for answered status
@@ -65,6 +102,17 @@ function submitAnswer() {
     props.question.jawaban.toLowerCase();
   isAnswered.value = true; // Menandakan soal sudah dijawab
   emit("answered", isAnswered.value); // Emit event ke parent
+  simpanJawabanKeStore(props.NomorSoal, {
+    hasil: isCorrect.value,
+    answer: userAnswer.value,
+  });
+}
+
+function simpanJawabanKeStore(nomor, jawaban) {
+  console.log("Jawaban disimpan");
+  console.log("nomor yang disimpan", nomor);
+
+  soalStore.setJawabanUser(nomor, jawaban);
 }
 </script>
 
