@@ -10,10 +10,19 @@ import NextButton from "../components/soalmateri/NextButton.vue"; // Tombol Next
 import StrokePlayAngka from "@/components/soalmateri/StrokePlayAngka.vue";
 
 // service
-import getSpecialData from "../service/soal/getSpecialData";
+import getSpecialMathData from "../service/soal/getSpecialMathData";
+import {
+  transformSoalData,
+  transformJawabanData,
+} from "../service/soalMathFunct";
+import {
+  getBundleUserData,
+  simpanSoal,
+} from "@/service/supabase/soalMatematika";
 
 // store
 import { useSoalStore } from "@/stores/soalStore";
+import { useAuthStore } from "@/stores/auth";
 const soalStore = useSoalStore();
 
 // pengaturan route
@@ -22,7 +31,7 @@ const router = useRouter();
 
 // data data dari route
 const path = computed(() => route.path.split("/").pop() || "");
-console.log("📍 Path dari URL:", path.value);
+// console.log("📍 Path dari URL:", idSoal);
 
 function goBack() {
   soalStore.setIndex(0); // ganti index terakhir di storenya jadi 0
@@ -35,54 +44,86 @@ const dataquery = JSON.parse(route.query.needData || "null");
 const idSoal = route.params.id;
 const jumlahSoal = ref(0);
 const dataSoal = ref([]); // data semua soalnya (jika di generate)
+const dataJawaban = ref([]); // data semua soalnya (jika di generate)
 const currentSoal = ref({}); // data semua soalnya (jika di generate)
 const currentSoalIndex = ref(0); // Menyimpan nomor soal aktif
 const isAnswered = ref(false); // Menyimpan status apakah soal sudah dijawab
-const currenAnswer = ref(null);
+const currenAnswer = ref([]);
 
-console.log("jawaban nul enggak", currenAnswer == null);
+onMounted(async () => {
+  // get id user ------------------------
+  const auth = useAuthStore();
+  await auth.fetchUserAndProfile(); // memastikan data user dan profile terisi
 
-onMounted(() => {
+  const userId = auth.user?.id;
+  // ------------------------------------
+
   // cek dulu apakah ada soal di store
   if (!soalStore.IsAdaSoal()) {
     // jika masuk sini berati tidak ada
-    // cek apakah ini ada nilai data query khusus
-    if (dataquery != null) {
-      // jika masuk sini berarti ada
-      soalStore.setId(idSoal); // tambahkan id soal ke store
-      dataSoal.value = getSpecialData(dataquery); // Generate soalnya, menghasilkan soal sesuai tipenya
-      soalStore.tambahBanyakSoal(dataSoal.value); // setelah dapat dataSoal simpan ke store
-      // cek apakah benar benar sudah masuk
-      if (soalStore.getSemuaSoal.length > 1) {
-        console.log(soalStore.getSemuaSoal); // ambil data soalnya
-        // jika masuk sini berarti soal sudah kesimpan
-        // dataSoal.value = soalStore.getSemuaSoal; // ambil data soalnya
-        jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
-        currentSoal.value = soalStore.getSoalByNomor(
-          currentSoalIndex.value + 1
-        )[0]; // simpan soal pertama untuk ditampilkan
+
+    const soAlFrmDatabase = await getBundleUserData(userId, idSoal);
+    if (soAlFrmDatabase.length > 0) {
+      // jika ada masuk sini
+      dataSoal.value = transformSoalData(soAlFrmDatabase); // data soalnya diisi ini
+      soalStore.setId(idSoal);
+      // data jawabannya diisi
+      dataJawaban.value = transformJawabanData(soAlFrmDatabase);
+    } else {
+      if (dataquery != null) {
+        // cek apakah ini ada nilai data query khusus
+        // jika masuk sini berarti ada
+        soalStore.setId(idSoal); // tambahkan id soal ke store
+        dataSoal.value = getSpecialMathData(dataquery); // Generate soalnya, menghasilkan soal sesuai tipenya
+
+        // simpan datanya ke database dulu
+        const berhasil = await simpanSoal(dataSoal.value, userId, idSoal);
+
+        if (berhasil) {
+          console.info("Semua soal berhasil disimpan!");
+        } else {
+          console.error("Terjadi kesalahan saat menyimpan soal.");
+          return;
+        }
       }
     }
+
+    soalStore.tambahBanyakSoal(dataSoal.value); // setelah dapat dataSoal simpan ke store
+    // simpan data jawaban ke store
+    dataJawaban.value.forEach((item) => {
+      soalStore.setJawabanUser(item.nomor, item);
+    });
+    // cek apakah benar benar sudah masuk
+    if (soalStore.getSemuaSoal.length > 1) {
+      // jika masuk sini berarti soal sudah kesimpan
+      // dataSoal.value = soalStore.getSemuaSoal; // ambil data soalnya
+      jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
+      currentSoal.value = soalStore.getSoalByNomor(
+        currentSoalIndex.value + 1
+      )[0]; // simpan soal pertama untuk ditampilkan
+    }
+    currenAnswer.value = soalStore.getJawabanUser(currentSoalIndex.value + 1);
   } else {
     // samakan apakah id soal di route sama dengan yang di store
+    console.log("ada soal");
+
     if (idSoal == soalStore.getId) {
-      console.log(soalStore.getSemuaSoal); // ambil data soalnya
       currentSoalIndex.value = soalStore.getIndex; // index soalnya di gasnti ke soal berikutnya
       // kalau idnya sama tinggal tampilkan soalnya berdasarkan currentIndex yang dikerjakan
       jumlahSoal.value = soalStore.jumlahSoalUnik; // simpan jumlah soalnya
       currentSoal.value = soalStore.getSoalByNomor(soalStore.getIndex + 1)[0];
       console.log(currentSoal.value);
+      console.log(currenAnswer.value);
     }
     // isi jawabannya
     currenAnswer.value = soalStore.getJawabanUser(currentSoalIndex.value + 1);
+
+    console.log(soalStore.getSemuaJawabanUser);
 
     // cek apakah soal sudah selesai dikerjakan
     if (soalStore.isSemuaJawabanLengkap) {
       isAnswered.value = true; // numculkan tombol lanjut/finish
     }
-    console.log("jawavan lengkap", soalStore.isSemuaJawabanLengkap);
-    console.log("semua soal", soalStore.getSemuaSoal);
-    console.log("semua jawaban", soalStore.getSemuaJawabanUser);
   }
 });
 
@@ -95,7 +136,7 @@ onMounted(() => {
  *
  * tiap kali user masuk ke halaman ini
  * [x] cek dulu apakah ada soal di store
- * kalau ada cek apakah soalnya seperti yang dimaksud user (by id bundle soal)
+ * [x] kalau ada cek apakah soalnya seperti yang dimaksud user (by id bundle soal)
  * jikas iya tampilkan. jika tidak cari soalnya dan ganti (ikuti logika berikutnya)
  *
  * Jika user belum mengerjakan soal
@@ -103,8 +144,8 @@ onMounted(() => {
  * [x] Generate soalnya
  * [x] setelah dapat dataSoal simpan ke store
  * [x] ambil lagi, lalu tampilkan ke user (untuk tampilan ke user sudah lancar)(bisa dibuat satu persatu pengambilan soalnyaby number yg dikerjakan, sekarang tidak satu persatu tapi bisa ditampilkan)
- * Tiap kali user mengerjakan satu nomor soal perbarui Jawaban satu-persatu di store
- * Ketika jawaban terakhir sudah selesai user dan jawaban terakhir sudah disimpan maka baru tampilkan Tombol finish
+ * [x] Tiap kali user mengerjakan satu nomor soal perbarui Jawaban satu-persatu di store
+ * [x] Ketika jawaban terakhir sudah selesai user dan jawaban terakhir sudah disimpan maka baru tampilkan Tombol finish
  * Ketika tombol finish ditekan, maka simpan data soal dan jawaban yang ada to store ke database dan catata berdasar id user. (databasenya belum dibuat untuk ini)
  * dengan begitu user dianggap sudah mengerjakan bundle soal ini
  *
@@ -113,9 +154,9 @@ onMounted(() => {
  * ambil datanya dari database berdasarkan id bundel soalnya (databasenya belum dibuat untuk ini)
  * setelah dapat data soalnya masukkan ke store
  * [x] panggil lagi dari store untuk ditampilkan ke user (bisa satu persatu, sekarang tidak satu persatu tapi bisa ditampilkan)
- * simpan jawaban user ke store, jika sudah semuanya maka tampilkan tombol finish
- * ketika user menekan tombol finish simpan soal ke database sambil redirect.
- * Jika soal sudah disimpan ke database maka user dianggap sudah mengerjakan soal.
+ * [x] simpan jawaban user ke store, jika sudah semuanya maka tampilkan tombol finish
+ * [x] ketika user menekan tombol finish simpan soal ke database sambil redirect.
+ * [x] Jika soal sudah disimpan ke database maka user dianggap sudah mengerjakan soal.
  *
  * antisipasi data jawaban user tidak tersimpan
  * Jika user memencek finish dan data tidak bisa tersimpan di database
@@ -137,7 +178,6 @@ function nextSoal() {
     currenAnswer.value = soalStore.getJawabanUser(currentSoalIndex.value + 1);
     currentSoal.value = soalStore.getSoalByNomor(currentSoalIndex.value + 1)[0]; // soal saat ini diganti soal berikutnya
     soalStore.setIndex(currentSoalIndex.value); // ganti index terakhir di storenya
-    console.log("jawabannya nih bos senggol dong", currenAnswer.value);
 
     // cek apakah soal sudah selesai dikerjakan
     if (soalStore.isSemuaJawabanLengkap) {

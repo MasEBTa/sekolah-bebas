@@ -21,8 +21,9 @@ function startAnimationHandler() {
   writer1.value?.restartAnimation();
 }
 function handleFinish(result) {
-  console.log("Latihan selesai:", result);
-  soalStore.setJawabanUser(props.NomorSoal, result);
+  console.log(props.jawaban);
+
+  soalStore.updateJawabanUserPartial(props.NomorSoal, { finished: true });
   isAnswered.value = true; // Menandakan soal sudah dijawab
   emit("answered", isAnswered.value); // Emit event ke parent
 }

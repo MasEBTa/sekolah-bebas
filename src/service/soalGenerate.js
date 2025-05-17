@@ -18,6 +18,7 @@ export function generateNumberPathEssaySoal(path, key = null) {
   return {
     tipe: "esay-singkat-stroke",
     soal: "Angka berapakah ini?",
+    angka: randomKey,
     path: {
       strokes: selectedPath.strokes,
     },

@@ -60,6 +60,22 @@ export const useSoalStore = defineStore("soal", {
 
       this.jawabanUser[nomor] = jawaban;
     },
+    updateJawabanUserPartial(nomor, perubahan) {
+      if (!this.jawabanUser[nomor]) {
+        console.error(`Jawaban untuk nomor ${nomor} tidak ditemukan.`);
+        return;
+      }
+
+      if (typeof perubahan !== "object" || perubahan === null) {
+        console.error(`Perubahan untuk nomor ${nomor} harus berupa objek.`);
+        return;
+      }
+
+      this.jawabanUser[nomor] = {
+        ...this.jawabanUser[nomor],
+        ...perubahan,
+      };
+    },
     resetJawabanUser() {
       this.jawabanUser = {};
     },
