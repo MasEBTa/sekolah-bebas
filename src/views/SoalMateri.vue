@@ -137,9 +137,9 @@ onMounted(async () => {
  * tiap kali user masuk ke halaman ini
  * [x] cek dulu apakah ada soal di store
  * [x] kalau ada cek apakah soalnya seperti yang dimaksud user (by id bundle soal)
- * jikas iya tampilkan. jika tidak cari soalnya dan ganti (ikuti logika berikutnya)
+ * [x] jikas iya tampilkan. jika tidak cari soalnya dan ganti (ikuti logika berikutnya)
  *
- * Jika user belum mengerjakan soal
+ * [x] Jika user belum mengerjakan soal
  * [x] cek apakah ini ada nilai data query khusus (berarti soal generate bukan soal yang disimpan di database)
  * [x] Generate soalnya
  * [x] setelah dapat dataSoal simpan ke store
@@ -149,10 +149,10 @@ onMounted(async () => {
  * Ketika tombol finish ditekan, maka simpan data soal dan jawaban yang ada to store ke database dan catata berdasar id user. (databasenya belum dibuat untuk ini)
  * dengan begitu user dianggap sudah mengerjakan bundle soal ini
  *
- * Jika user belum mengerjakan soal
+ * [x] Jika user belum mengerjakan soal
  * [x] cek apakah ini ada nilai data query khusus, jika tidak ada
- * ambil datanya dari database berdasarkan id bundel soalnya (databasenya belum dibuat untuk ini)
- * setelah dapat data soalnya masukkan ke store
+ * [x] ambil datanya dari database berdasarkan id bundel soalnya (databasenya belum dibuat untuk ini)
+ * [x] setelah dapat data soalnya masukkan ke store
  * [x] panggil lagi dari store untuk ditampilkan ke user (bisa satu persatu, sekarang tidak satu persatu tapi bisa ditampilkan)
  * [x] simpan jawaban user ke store, jika sudah semuanya maka tampilkan tombol finish
  * [x] ketika user menekan tombol finish simpan soal ke database sambil redirect.
